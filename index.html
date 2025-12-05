@@ -1,1184 +1,1589 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <meta name="description" content="Ajith N — Full Stack Java developer. Portfolio showcasing projects, skills, and contact information." />
-  <link rel="icon" href="favicon.ico" />
-  <title>Ajith N — Portfolio</title>
-
-  <!-- Fonts & Icons --><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
-  
-  <!-- Inline CSS (single-page) --><style>
-    /* 1. THEME & VARIABLES */
-    :root {
-      --primary: #667eea; --secondary: #764ba2; --accent: #f093fb;
-      --text: #2d3748; --muted: #4a5568; --light: #a0aec0;
-      --bg: #ffffff; --bg2: #f7fafc; --dark: #1a202c;
-      --grad: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      --radius: 12px; --t: all .3s ease;
-    }
-    html[data-theme="dark"] {
-      --text: #f7fafc; --muted: #a0aec0; --light: #4a5568;
-      --bg: #1a202c; --bg2: #2d3748; --dark: #ffffff;
-    }
-
-    /* 2. BASE & LAYOUT */
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-    body {
-      font-family: Poppins, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif;
-      color: var(--text); background: var(--bg);
-      transition: background .3s, color .3s;
-      overflow-x: hidden;
-    }
-    .container { max-width: 1200px; margin: auto; padding: 0 20px; }
-    ::selection { background: var(--primary); color: #fff; }
-
-    /* 3. NEW: Animated Background & Cursor */
-    .bgfx {
-      position: fixed; inset: 0; z-index: -1;
-      background: var(--bg);
-      transition: background .3s;
-    }
-    .bgfx::before {
-        content: ""; position: fixed; inset: 0; z-index: -1;
-        background: radial-gradient(400px at 20% 10%, rgba(102,126,234,.15), transparent 80%),
-                    radial-gradient(400px at 80% 20%, rgba(118,75,162,.15), transparent 80%),
-                    radial-gradient(400px at 50% 90%, rgba(240,147,251,.12), transparent 80%);
-    }
-    #cursor {
-      position: fixed; width: 8px; height: 8px;
-      background: var(--primary); border-radius: 50%;
-      pointer-events: none; z-index: 9999;
-      transform: translate(-50%, -50%);
-      transition: width .2s, height .2s, border .2s;
-      display: none; /* Hidden on touch devices */
-    }
-    @media (pointer: fine) { #cursor { display: block; } }
-    #cursor.hover { width: 40px; height: 40px; background: transparent; border: 2px solid var(--primary); }
-
-    /* 4. NAVBAR */
-    .navbar {
-      position: fixed; inset: 0 0 auto 0; height: 70px;
-      background: color-mix(in srgb, var(--bg) 80%, transparent);
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid color-mix(in srgb, var(--dark) 8%, transparent);
-      z-index: 1000;
-    }
-    .nav-row { height: 100%; display: flex; align-items: center; justify-content: space-between; }
-    .brand { font-weight: 700; font-size: 1.4rem; color: var(--primary); }
-    .brand span { color: var(--accent); }
-    .nav-menu { list-style: none; display: flex; gap: 1rem; align-items:center; }
-    .nav-menu a {
-      color: var(--muted); text-decoration: none; font-weight: 500;
-      padding: .5rem .2rem; position: relative; transition: color .3s;
-    }
-    .nav-menu a::after {
-      content: ''; position: absolute; left: 0; bottom: 0; height: 2px;
-      width: 0; background: var(--grad); transition: width .25s;
-    }
-    .nav-menu a.active, .nav-menu a:hover { color: var(--text); }
-    .nav-menu a.active::after { width: 100%; }
-    .burger { display: none; flex-direction: column; gap: 4px; cursor: pointer; }
-    .burger .bar { width: 24px; height: 3px; background: var(--primary); border-radius: 3px; }
-
-    /* Theme Switcher */
-    .theme-switcher { position: relative; }
-    #theme-btn {
-      width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center;
-      background: var(--bg2); color: var(--muted); cursor: pointer; border: none;
-      font-size: 1rem;
-    }
-
-    /* 5. SECTIONS & HEADERS */
-    section { padding: 110px 0; }
-    .section-header { text-align: center; margin-bottom: 3rem; }
-    .section-title {
-      font-weight: 700; font-size: 2.2rem; position: relative;
-      display: inline-block;
-    }
-    .section-title::after {
-      content: ''; position: absolute; left: 50%; transform: translateX(-50%);
-      bottom: -10px; width: 60px; height: 4px;
-      background: var(--grad); border-radius: 2px;
-    }
-    .section-sub { color: var(--muted); margin-top: .75rem; }
-    [data-reveal] {
-        opacity: 0; transform: translateY(30px);
-        transition: opacity .8s cubic-bezier(0.5, 0, 0, 1), transform .8s cubic-bezier(0.5, 0, 0, 1);
-    }
-    [data-reveal].visible { opacity: 1; transform: translateY(0); }
-
-    /* 6. HERO */
-    .hero { min-height: 100vh; display: flex; align-items: center; padding-top: 70px; }
-    .hero-grid { display: grid; grid-template-columns: 1.2fr .8fr; gap: 3rem; align-items: center; }
-    .title { font-size: 3.2rem; line-height: 1.15; }
-    .grad-text { background: var(--grad); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
-    .subtitle { color: var(--muted); font-size: 1.25rem; margin: .8rem 0 1.2rem; min-height: 1.25em; }
-    .typing::after { content: '|'; color: var(--primary); animation: blink 1s infinite; }
-    @keyframes blink { 0%, 50% { opacity: 1 } 51%, 100% { opacity: 0 } }
-    .lead { color: var(--muted); font-size: 1.05rem; }
-    .cta { display: flex; gap: 1rem; margin: 1.6rem 0 1.2rem; }
-    .btn {
-      padding: 12px 22px; border-radius: var(--radius); text-decoration: none;
-      font-weight: 600; display: inline-flex; align-items: center; gap: 8px;
-      transition: transform .25s, box-shadow .25s;
-    }
-    .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(102,126,234,.2); }
-    .btn:active { transform: scale(.98); }
-    .btn-primary { background: var(--grad); color: #fff; }
-    .btn-outline { border: 2px solid var(--primary); color: var(--primary); }
-    .btn-outline:hover { background: var(--primary); color: #fff; box-shadow: 0 6px 20px rgba(102,126,234,.2); }
-    .social { display: flex; gap: .8rem; }
-    .iconbtn {
-      width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center;
-      background: var(--bg2); color: var(--muted); transition: var(--t);
-    }
-    .iconbtn:hover { background: var(--primary); color: #fff; transform: translateY(-3px); }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ajith N | Full Stack Developer</title>
     
-    /* --- HERO VISUAL: animated blobs + featured project --- */
-    .hero-side {
-      display: flex; flex-direction: column; gap: 1rem; align-items: center; justify-content: center;
-      width: 100%; height: 400px; position: relative; overflow: hidden; border-radius: var(--radius);
-      background: linear-gradient(180deg, rgba(0,0,0,0.02), rgba(0,0,0,0.06));
-    }
-    .hero-banner { position: relative; width: 100%; height: 100%; border-radius: var(--radius); overflow: hidden; display:flex; align-items:center; justify-content:center; }
-    .hero-overlay { position: absolute; z-index: 2; color: #fff; text-align: center; padding: 1rem; background: linear-gradient(180deg, rgba(0,0,0,0.0), rgba(0,0,0,0.45)); width: 100%; bottom: 0; }
-    .hero-overlay .pro-name { font-size: 2rem; margin: 0; font-weight: 700; letter-spacing: .5px; }
-    .hero-overlay .pro-title { margin: .4rem 0 0; opacity: .95; }
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
 
-    @media (max-width: 900px) {
-      .hero-side { height: 320px; }
-      .hero-overlay .pro-name { font-size: 1.6rem; }
-    }
-    /* Scribble Board styles */
-    .scribble-board {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      border-radius: var(--radius);
-      background: var(--bg);
-      box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-    }
-    .scribble-canvas {
-      width: 100%;
-      height: 100%;
-      cursor: crosshair;
-      background: var(--bg);
-      border-radius: var(--radius);
-    }
-    .scribble-controls {
-      position: absolute;
-      bottom: 1rem;
-      right: 1rem;
-      z-index: 10;
-      display: flex;
-      gap: 0.5rem;
-    }
-    .scribble-controls .btn {
-      background: var(--bg);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-      padding: 8px 16px;
-    }
-    @media (max-width: 900px) { .hs-btn { width:38px;height:38px; } .hs-card { width: 96%; } }
-    .hero-visual {
-      position: absolute; inset: 0; z-index: 0; pointer-events: none; overflow: hidden;
-      display: flex; align-items: center; justify-content: center;
-    }
-    .blob {
-      position: absolute; width: 420px; height: 420px; border-radius: 50%;
-      filter: blur(60px) saturate(140%);
-      opacity: 0.9; mix-blend-mode: screen;
-      animation: float 8s ease-in-out infinite;
-      transform: translate3d(0,0,0);
-    }
-    .blob.b1 { background: radial-gradient(circle at 30% 30%, rgba(118,75,162,0.95), rgba(118,75,162,0.7) 40%, transparent 60%); left: -10%; top: -20%; animation-duration: 9s; }
-    .blob.b2 { background: radial-gradient(circle at 70% 40%, rgba(102,126,234,0.95), rgba(102,126,234,0.7) 40%, transparent 60%); right: -12%; top: -10%; animation-duration: 11s; }
-    .blob.b3 { background: radial-gradient(circle at 50% 70%, rgba(240,147,251,0.95), rgba(240,147,251,0.7) 40%, transparent 60%); left: 20%; bottom: -25%; width: 520px; height: 520px; animation-duration: 12s; }
-    @keyframes float { 0% { transform: translateY(0) translateX(0) } 50% { transform: translateY(-18px) translateX(10px) } 100% { transform: translateY(0) translateX(0) } }
-    .feat-project {
-      position: relative; z-index: 2; background: color-mix(in srgb, var(--bg) 92%, transparent); border-radius: 12px; padding: 1rem; max-width: 340px; width: 86%; text-align: center; box-shadow: 0 8px 36px rgba(0,0,0,.12);
-    }
-    .feat-project h3 { margin-bottom: .4rem; color: var(--primary); }
-    .fp-controls { display:flex; gap:.5rem; justify-content:center; margin-top:.6rem; }
-    .fp-controls button { border: none; background: var(--bg2); padding: .4rem .7rem; border-radius: 8px; cursor:pointer; }
+    <!-- FontAwesome (For Social Icons) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    /* 7. ABOUT */
-    .about { background: var(--bg2); }
-    .about-wrap { max-width: 900px; margin: auto; text-align: center; }
-    .about .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; margin: 1.5rem 0 2.2rem; }
-    .card {
-      background: var(--bg); border-radius: var(--radius); padding: 1rem;
-      display: flex; align-items: center; gap: .9rem;
-      box-shadow: 0 1px 4px color-mix(in srgb, var(--dark) 6%, transparent);
-      transition: transform .3s;
-    }
-    .card:hover { transform: translateY(-4px); }
-    .card i { color: var(--primary); font-size: 1.3rem; }
-    .tabs {
-      background: var(--bg); border-radius: var(--radius);
-      box-shadow: 0 4px 16px color-mix(in srgb, var(--dark) 6%, transparent);
-      overflow: hidden; text-align: left;
-    }
-    .tab-headers { display: flex; background: var(--bg2); }
-    .tab-headers button {
-      flex: 1; padding: 1rem; border: 0; background: transparent; cursor: pointer;
-      color: var(--muted); font-weight: 600; font-size: 1rem; transition: .3s;
-    }
-    .tab-headers button.active, .tab-headers button:hover { background: var(--primary); color: #fff; }
-    .tab-body { padding: 1.4rem; }
-    .timeline { position: relative; padding-left: 2rem; }
-    .timeline::before { content: ''; position: absolute; left: 14px; top: 0; bottom: 0; width: 2px; background: var(--grad); }
-    .titem { position: relative; margin-bottom: 1.1rem; }
-    .titem .dot {
-      position: absolute; left: -26px; top: 2px; width: 12px; height: 12px;
-      border-radius: 50%; background: var(--primary); border: 2px solid var(--bg);
-    }
-    .tdate { color: var(--accent); font-weight: 600; font-size: .9rem; margin: .2rem 0 .35rem; }
-    .titem h4 { color: var(--primary); font-size: 1.05rem; }
-    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
-    .pill {
-      display: inline-block; padding: .35rem .75rem; border-radius: 999px;
-      background: var(--bg2); color: var(--text); font-weight: 600; font-size: .85rem; margin: .25rem;
-    }
+    <!-- Devicon (For Brand Logos) -->
+    <link rel="stylesheet" type='text/css' href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css" />
 
-    /* 8. SKILLS */
-    .skillcats { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
-    .skillbox {
-      background: var(--bg); border-radius: var(--radius); padding: 1.4rem;
-      box-shadow: 0 1px 6px color-mix(in srgb, var(--dark) 6%, transparent);
-    }
-    .skillbox h3 { color: var(--primary); text-align: center; margin-bottom: 1.1rem; }
-    .sgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 1rem; }
-    .skill {
-      background: var(--bg); border-radius: var(--radius); padding: 1.4rem 1rem;
-      text-align: center; border: 1px solid color-mix(in srgb, var(--dark) 6%, transparent);
-      transition: var(--t);
-    }
-    .skill:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 6px 18px color-mix(in srgb, var(--dark) 8%, transparent);
-    }
-    .sico {
-      width: 56px; height: 56px; border-radius: 50%; display: grid;
-      place-items: center; margin: 0 auto .8rem; background: var(--grad);
-      color: #fff; font-size: 1.2rem;
-    }
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
 
-    /* 9. EXPERIENCE */
-    .experience { background: var(--bg2); }
-    .expcol { max-width: 900px; margin: auto; display: grid; gap: 1.2rem; }
-    .exp {
-      display: flex; gap: 1rem; background: var(--bg); border-radius: var(--radius);
-      padding: 1.2rem; border: 1px solid color-mix(in srgb, var(--dark) 6%, transparent);
-      transition: transform .3s;
-    }
-    .exp:hover { transform: translateX(5px); }
-    .exp .ico {
-      width: 56px; height: 56px; border-radius: 50%; display: grid; place-items: center;
-      background: var(--grad); color: #fff; font-size: 1.2rem; flex-shrink: 0;
-    }
-    .exp h3 { color: var(--primary); margin-bottom: .25rem; }
-    .date { color: var(--accent); font-weight: 600; font-size: .9rem; margin: .25rem 0 .5rem; }
+    <!-- Tailwind Config -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Space Grotesk', 'sans-serif'],
+                    },
+                    colors: {
+                        dark: '#0f172a', // Slate 900
+                        card: 'rgba(30, 41, 59, 0.7)', // Slate 800 with opacity
+                        glassBorder: 'rgba(148, 163, 184, 0.1)', // Slate 400 low opacity
+                        accent: '#38bdf8', // Sky 400
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'fade-in-up': 'fadeInUp 0.5s ease-out forwards',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        },
+                        fadeInUp: {
+                            '0%': { opacity: 0, transform: 'translateY(10px)' },
+                            '100%': { opacity: 1, transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
 
-    /* 10. PROJECTS */
-    .pgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.2rem; }
-    .pcard {
-      background: var(--bg); border-radius: var(--radius); overflow: hidden;
-      border: 1px solid color-mix(in srgb, var(--dark) 6%, transparent);
-      transition: transform .25s, box-shadow .25s;
-      display: flex; flex-direction: column;
-    }
-    .pcard:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 10px 28px color-mix(in srgb, var(--dark) 12%, transparent);
-    }
-    .pimg { height: 190px; background: var(--grad); position: relative; }
-    .pover {
-      position: absolute; inset: 0; background: rgba(0, 0, 0, .78);
-      display: grid; place-items: center; opacity: 0; transition: opacity .25s;
-    }
-    .pcard:hover .pover { opacity: 1; }
-    .plinks { display: flex; gap: .8rem; }
-    .plink {
-      width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center;
-      background: var(--primary); color: #fff; text-decoration: none; transition: var(--t);
-    }
-    .plink:hover { background: var(--accent); transform: scale(1.06); }
-    .pbody { padding: 1.2rem; flex-grow: 1; display: flex; flex-direction: column; }
-    .pbody h3 { color: var(--primary); margin-bottom: .4rem; }
-    .pbody p { flex-grow: 1; }
-    .techs { margin-top: .6rem; }
+    <style>
+        body {
+            background-color: #0f172a;
+            color: #e2e8f0;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            /* Engineering Grid Pattern */
+            background-image: radial-gradient(#334155 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
 
-    /* 11. CONTACT */
-    .contact { background: var(--bg2); }
-    .crow { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start; }
-    .citem {
-      display: flex; gap: 1rem; background: var(--bg);
-      border: 1px solid color-mix(in srgb, var(--dark) 6%, transparent);
-      border-radius: var(--radius); padding: 1rem;
-    }
-    .cicon { width: 56px; height: 56px; border-radius: 50%; display: grid; place-items: center; background: var(--grad); color: #fff; }
-    .form {
-      background: var(--bg); border: 1px solid color-mix(in srgb, var(--dark) 6%, transparent);
-      border-radius: var(--radius); padding: 1.2rem;
-    }
-    .fg { margin-bottom: 1rem; }
-    .fg input, .fg textarea {
-      width: 100%; padding: .9rem; border-radius: 10px;
-      border: 2px solid var(--bg2); font: inherit; transition: border .2s;
-      background: var(--bg2); color: var(--text);
-    }
-    .fg input:focus, .fg textarea:focus { outline: 0; border-color: var(--primary); }
-    textarea { min-height: 140px; resize: vertical; }
+        /* Ambient Vignette (Subtle) */
+        .ambient-light {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: radial-gradient(circle at 50% 0%, rgba(56, 189, 248, 0.08), transparent 60%);
+            pointer-events: none;
+        }
 
-    /* Toast Notification */
-    .toast {
-        position: fixed; bottom: 20px; left: 50%;
-        transform: translate(-50%, 150%);
-        padding: 12px 24px; border-radius: var(--radius);
-        background: var(--grad); color: #fff;
-        box-shadow: 0 4px 20px rgba(0,0,0,.2);
-        z-index: 2000; transition: transform .4s ease-out;
-    }
-    .toast.show { transform: translate(-50%, 0); }
+        /* Modern Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #475569; }
 
-    /* 12. FOOTER */
-    .footer { background: var(--dark); color: var(--light); padding: 1.6rem 0; }
-    .frow { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; }
-    .flinks { display: flex; gap: .6rem; }
-    .flinks a {
-      width: 40px; height: 40px; border-radius: 50%; display: grid;
-      place-items: center; background: var(--primary); color: #fff;
-      text-decoration: none; transition: var(--t);
-    }
-    .flinks a:hover { background: var(--accent); transform: translateY(-3px); }
+        /* Professional Cards (Matte Finish) */
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.7); /* Solid Slate 800ish */
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: border-color 0.3s ease, transform 0.3s ease;
+        }
 
-    /* 13. CHATBOT */
-    .chatbot-toggle {
-        position: fixed; bottom: 24px; right: 24px;
-        width: 60px; height: 60px; border-radius: 50%;
-        background: var(--grad); color: #fff;
-        display: flex; align-items: center; justify-content: center;
-        font-size: 26px; cursor: pointer;
-        box-shadow: 0 6px 16px rgba(0,0,0,.25);
-        transition: transform .3s; z-index: 2000;
-    }
-    .chatbot-toggle:hover { transform: scale(1.1); }
-    .chatbot-window {
-        position: fixed; bottom: 100px; right: 24px;
-        width: 340px; max-height: 480px;
-        background: var(--bg); color: var(--text);
-        border-radius: 16px; box-shadow: 0 8px 28px rgba(0,0,0,.25);
-        display: none; flex-direction: column; overflow: hidden;
-        z-index: 1999; border: 1px solid color-mix(in srgb, var(--dark) 8%, transparent);
-    }
-    .chatbot-header {
-        background: var(--grad); color: #fff;
-        padding: .9rem 1rem; display: flex; align-items: center; gap: .7rem;
-    }
-    .chatbot-header img { width: 38px; height: 38px; border-radius: 50%; border: 2px solid #fff; }
-    .chatbot-body {
-        flex: 1; padding: .9rem; overflow-y: auto;
-        display: flex; flex-direction: column; gap: .6rem;
-        background: var(--bg2);
-    }
-    .chatbot-msg { padding: .6rem .9rem; border-radius: 12px; max-width: 80%; line-height: 1.4; font-size: .9rem; }
-    .from-bot { background: var(--grad); color: #fff; align-self: flex-start; border-bottom-left-radius: 2px; }
-    .from-user { background: var(--primary); color: #fff; align-self: flex-end; border-bottom-right-radius: 2px; }
-    .chatbot-input { display: flex; border-top: 1px solid color-mix(in srgb, var(--dark) 8%, transparent); }
-    .chatbot-input input {
-        flex: 1; border: none; padding: .8rem; font: inherit; outline: none;
-        background: var(--bg); color: var(--text);
-    }
-    .chatbot-input button {
-        background: var(--grad); color: #fff; border: none; width: 60px; cursor: pointer;
-        font-size: 1.1rem; transition: .3s;
-    }
-    .chatbot-input button:hover { opacity: .8; }
+        .glass-nav {
+            background: rgba(15, 23, 42, 0.85); /* Slate 900 high opacity */
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
 
-    /* 14. RESPONSIVE */
-    @media (max-width: 900px) {
-      .hero-grid { grid-template-columns: 1fr; text-align: center; }
-      .cta, .social { justify-content: center; }
-      .rain-container {
-        height: 300px; /* Adjust height for smaller screens */
-        margin-top: 2rem;
-      }
-      .title { font-size: 2.4rem; }
-      .crow { grid-template-columns: 1fr; }
-    }
-    @media (max-width: 768px) {
-      .burger { display: flex; }
-      .nav-menu {
-        position: fixed; left: -100%; top: 70px; flex-direction: column;
-        width: 100%;
-        background: color-mix(in srgb, var(--bg) 95%, transparent);
-        backdrop-filter: blur(10px);
-        padding: 1rem 0; transition: .3s;
-        align-items: flex-start;
-        padding-left: 20px;
-        gap: .5rem;
-      }
-      .nav-menu li { width: 100%; }
-      .nav-menu a { display: block; padding: .8rem; }
-      .theme-switcher { margin-left: 1rem; }
-      .nav-menu.active { left: 0; }
-      .chatbot-window { width: calc(100vw - 48px); }
-    }
-  </style>
+        /* Audio Visualizer Animation */
+        .bar {
+            width: 3px;
+            background: #38bdf8; /* Sky Blue */
+            animation: equalize 1s infinite;
+        }
+        .bar:nth-child(1) { animation-delay: -0.4s; height: 10px; }
+        .bar:nth-child(2) { animation-delay: -0.2s; height: 16px; }
+        .bar:nth-child(3) { animation-delay: -0.6s; height: 12px; }
+        .bar:nth-child(4) { animation-delay: -0.8s; height: 8px; }
+
+        @keyframes equalize {
+            0%, 100% { height: 8px; }
+            50% { height: 18px; }
+        }
+
+        /* Tab Switch Animation */
+        .section-fade-in {
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Scroll Reveal Utility */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Card 3D Tilt Effect Base */
+        .tilt-card {
+            transition: transform 0.1s ease;
+            transform-style: preserve-3d;
+        }
+        
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center; /* Vertical Center */
+            align-items: center; /* Horizontal Center */
+        }
+        
+        /* Skill Block Hover */
+        .skill-block {
+            background: rgba(30, 41, 59, 0.4);
+            border: 1px solid rgba(148, 163, 184, 0.1);
+            margin-bottom: 0; /* Reset margins */
+        }
+        .skill-block:hover {
+            background: rgba(30, 41, 59, 0.9);
+            border-color: #38bdf8; /* Sky Blue Accent */
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Skill Icon Wrapper */
+        .icon-circle {
+            background: rgba(255,255,255,0.03);
+            border-radius: 12px; /* Slight rounded square looks more technical */
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 0.5rem;
+            transition: background 0.3s;
+        }
+        .skill-block:hover .icon-circle {
+            background: rgba(56, 189, 248, 0.1);
+        }
+
+        /* Timeline Dot Pulse */
+        .timeline-dot::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            height: 100%;
+            background: inherit;
+            border-radius: 50%;
+            animation: ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;
+            opacity: 0.75;
+        }
+        @keyframes ping {
+            75%, 100% { transform: translate(-50%, -50%) scale(2); opacity: 0; }
+        }
+
+        /* Map Grayscale Filter */
+        iframe.map-filter {
+            filter: grayscale(100%) invert(92%) contrast(83%);
+        }
+
+        /* Social Icon Hover Effects */
+        .social-link {
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 8px; /* Boxier social icons */
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #94a3b8; /* Slate 400 */
+        }
+        .social-link:hover {
+            transform: translateY(-2px);
+            background: #38bdf8;
+            border-color: #38bdf8;
+            color: #0f172a; /* Dark text on hover */
+        }
+        .social-link img {
+            transition: all 0.3s ease;
+        }
+        .social-link:hover img {
+            filter: brightness(0); /* Make black on hover */
+        }
+    </style>
 </head>
-<body>
-  <div class="bgfx"></div>
-  <div id="cursor"></div>
+<body class="selection:bg-sky-500/30 selection:text-white">
 
-  <!-- NAV --><nav class="navbar">
-    <div class="container nav-row">
-      <div class="brand">AJITH<span> N</span></div>
-      <ul class="nav-menu">
-        <li><a href="#home">Home</a></li>
-        <li><a href="#about">About</a></li>
-        <li><a href="#skills">Skills</a></li>
-        <li><a href="#experience">Experience</a></li>
-        <li><a href="#projects">Projects</a></li>
-  <li>
-    <a id="resume-link" href="https://drive.google.com/file/d/1Vi1qJJhqXLiMiOUaNcWSvTe7ICqta1ZA/preview" target="_blank" rel="noopener" aria-label="Preview resume">
-      Resume
-    </a>
-    <a id="resume-download" href="https://drive.google.com/uc?export=download&id=1Vi1qJJhqXLiMiOUaNcWSvTe7ICqta1ZA" download style="margin-left:8px;" aria-label="Download resume" title="Download Resume">
-      <i class="fas fa-download"></i>
-    </a>
-  </li>
-  <li><a href="#contact">Contact</a></li>
-  <li>
-            <div class="theme-switcher">
-                <button id="theme-btn" title="Toggle Theme">
-                    <i class="fas fa-sun"></i>
+    <!-- Ambient Background -->
+    <div class="ambient-light"></div>
+
+    <!-- Resume Modal (Fixed) -->
+    <div id="resume-modal" class="fixed inset-0 z-[100] flex items-center justify-center hidden transition-opacity duration-300 opacity-0">
+        <div class="absolute inset-0 bg-slate-900/90 backdrop-blur-md" onclick="toggleResumeModal()"></div>
+        
+        <div class="glass-panel p-4 md:p-6 rounded-2xl relative z-10 w-[95%] max-w-5xl h-[90vh] flex flex-col transform scale-95 transition-transform duration-300" id="resume-content">
+            
+            <!-- Modal Header -->
+            <div class="flex justify-between items-center mb-4 px-2">
+                <h3 class="text-xl md:text-2xl font-bold text-white flex items-center gap-2">
+                    <i data-lucide="file-text" class="text-sky-400 w-6 h-6"></i> Resume
+                </h3>
+                <div class="flex items-center gap-3">
+                    <a href="https://drive.google.com/file/d/13iG92Jez2bJLDLp9Y-f5ytpjiyMbwnrD/view?usp=drive_link" target="_blank" class="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold transition-all flex items-center gap-2 border border-slate-700 sfx-click">
+                        <i class="fas fa-external-link-alt"></i> Open in New Tab
+                    </a>
+                    <a href="https://drive.google.com/uc?export=download&id=13iG92Jez2bJLDLp9Y-f5ytpjiyMbwnrD" class="hidden md:flex px-4 py-2 rounded-lg bg-sky-500 hover:bg-sky-600 text-slate-900 font-bold text-xs transition-all items-center gap-2 shadow-lg shadow-sky-500/20 sfx-click">
+                        <i class="fas fa-download"></i> Download
+                    </a>
+                    <button onclick="toggleResumeModal()" class="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-colors sfx-click">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- PDF Viewer Container -->
+            <div class="flex-1 w-full bg-slate-950 rounded-xl overflow-hidden relative border border-slate-800 shadow-inner">
+                <div class="absolute inset-0 flex items-center justify-center text-slate-500 z-0">
+                    <div class="text-center">
+                        <i data-lucide="loader" class="w-8 h-8 animate-spin mx-auto mb-2 text-sky-500"></i>
+                        <p class="text-sm">Loading Preview...</p>
+                        <p class="text-xs mt-2 text-slate-600">If it doesn't load, use the "Open in New Tab" button.</p>
+                    </div>
+                </div>
+                <iframe src="https://drive.google.com/file/d/13iG92Jez2bJLDLp9Y-f5ytpjiyMbwnrD/preview" class="w-full h-full border-none relative z-10" allow="autoplay"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Navbar -->
+    <div class="fixed top-6 left-0 right-0 z-50 flex justify-center px-4">
+        <nav class="glass-nav rounded-2xl px-6 py-3 flex items-center justify-between gap-8 shadow-2xl shadow-black/20 max-w-2xl w-full transition-all duration-300">
+            <div class="flex items-center gap-2 cursor-pointer sfx-click" onclick="switchSection('home')">
+                <div class="w-8 h-8 rounded-lg bg-sky-500 flex items-center justify-center">
+                    <span class="font-display font-bold text-slate-900 text-sm">AN</span>
+                </div>
+            </div>
+
+            <!-- Desktop Links -->
+            <div class="hidden md:flex items-center gap-1">
+                <button onclick="switchSection('home')" class="nav-item px-4 py-2 rounded-lg text-sm font-medium text-white bg-white/10 transition-all sfx-hover sfx-click" data-target="home">Home</button>
+                <button onclick="switchSection('about')" class="nav-item px-4 py-2 rounded-lg text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 transition-all sfx-hover sfx-click" data-target="about">About</button>
+                <button onclick="switchSection('projects')" class="nav-item px-4 py-2 rounded-lg text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 transition-all sfx-hover sfx-click" data-target="projects">Projects</button>
+                <button onclick="switchSection('music')" class="nav-item px-4 py-2 rounded-lg text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 transition-all sfx-hover sfx-click" data-target="music">Music</button>
+                <button onclick="toggleResumeModal()" class="px-4 py-2 rounded-lg text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 transition-all flex items-center gap-2 sfx-hover sfx-click">
+                    Resume
                 </button>
             </div>
-        </li>
-      </ul>
-      <div class="burger" id="burger"><span class="bar"></span><span class="bar"></span><span class="bar"></span></div>
-    </div>
-  </nav>
-  <!-- HERO --><section id="home" class="hero" style="display:flex;flex-direction:column;justify-content:flex-end;min-height:100vh;padding-top:70px;">
-    <div class="container hero-grid" style="margin-bottom:0;">
-      <div class="hero-content-left" data-reveal>
-        <h1 class="title">Hi, I'm <span class="grad-text">Ajith N</span></h1>
-        <h2 class="subtitle"><span class="typing"></span></h2>
-        <p class="lead">Computer Science student passionate about building efficient, scalable software solutions. Skilled in Java, Spring Boot, and MySQL with hands‑on experience in cloud computing.</p>
-        <div class="cta">
-          <a class="btn btn-primary" href="#projects"><i class="fas fa-briefcase"></i> View My Work</a>
-          <a class="btn btn-outline" href="#contact"><i class="fas fa-paper-plane"></i> Get In Touch</a>
-        </div>
-        <div class="social">
-          <a class="iconbtn" target="_blank" href="https://www.linkedin.com/in/ajith-n-bdcu1160/"><i class="fab fa-linkedin-in"></i></a>
-          <a class="iconbtn" target="_blank" href="https://github.com/ajith04-n"><i class="fab fa-github"></i></a>
-          <a class="iconbtn" target="_blank" href="https://leetcode.com/u/ajithn_">
-            <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/leetcode.svg" alt="LeetCode" style="width:22px;height:22px;display:block;filter:invert(48%) sepia(82%) saturate(749%) hue-rotate(16deg) brightness(98%) contrast(92%);">
-          </a>
-          <a class="iconbtn" target="_blank" href="https://www.credly.com/users/ajithn_">
-            <img src="https://www.svgrepo.com/show/331358/credly.svg" alt="Credly" style="width:22px;height:22px;display:block;">
-          </a>
-          <a class="iconbtn" target="_blank" href="https://www.hackerrank.com/profile/ajith04n"><i class="fab fa-hackerrank"></i></a>
-          <a class="iconbtn" target="_blank" href="https://www.instagram.com/ajithn_/"><i class="fab fa-instagram"></i></a>
-        </div>
-      </div>
-      <div class="hero-side" data-reveal style="max-width:370px;min-width:270px;width:100%;height:400px;box-shadow:0 8px 32px rgba(0,0,0,0.08);margin-left:auto;">
-        <div class="scribble-board" style="height:100%;min-height:320px;">
-          <div style="position:absolute;top:1rem;left:1rem;z-index:10;display:flex;align-items:center;gap:.5rem;">
-            <span style="font-size:1.2rem;color:var(--primary);"><i class="fas fa-pen-nib"></i></span>
-            <span style="font-weight:600;color:var(--muted);font-size:1rem;">Scribble something here!</span>
-          </div>
-          <canvas id="scribble-canvas" class="scribble-canvas" aria-label="Interactive drawing board"></canvas>
-          <div class="scribble-controls">
-            <button id="reset-canvas" class="btn btn-outline" aria-label="Clear drawing board">
-              <i class="fas fa-eraser"></i> Clear Board
+
+            <div class="flex items-center gap-2">
+                <!-- Sound Toggle -->
+                <button id="sound-toggle" class="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-colors relative" title="Toggle Sound FX">
+                    <i data-lucide="volume-x" id="sound-icon" class="w-5 h-5"></i>
+                    <span id="sound-indicator" class="absolute top-0 right-0 w-2 h-2 bg-sky-500 rounded-full hidden"></span>
+                </button>
+
+                <button onclick="switchSection('contact')" class="hidden md:flex px-5 py-2 rounded-lg bg-white text-slate-900 font-semibold text-sm hover:bg-sky-100 transition-colors sfx-click sfx-hover">
+                    Let's Talk
+                </button>
+            </div>
+
+            <!-- Mobile Toggle -->
+            <button class="md:hidden text-white p-2 sfx-click" onclick="toggleMobileMenu()">
+                <i data-lucide="menu" class="w-6 h-6"></i>
             </button>
-          </div>
-        </div>
-      </div>
+        </nav>
     </div>
-    <!-- Down Arrow -->
-    <div style="width:100%;display:flex;justify-content:center;align-items:center;margin-top:2.5rem;">
-      <a href="#about" aria-label="Scroll down" style="text-decoration:none;">
-        <i class="fas fa-angle-down" style="font-size:3.5rem;color:var(--primary);animation:bounceDown 1.5s infinite;"></i>
-      </a>
-    </div>
-    <style>
-      @keyframes bounceDown {
-        0%, 100% { transform: translateY(0);}
-        50% { transform: translateY(18px);}
-      }
-    </style>
-  </section>
 
-  <!-- ABOUT --><section id="about" class="about">
-    <div class="container">
-      <div class="section-header" data-reveal>
-        <h2 class="section-title">About Me</h2>
-        <p class="section-sub">Get to know me better</p>
-      </div>
-      <div class="about-wrap" data-reveal>
-        <p>Dedicated CSE student at V.S.B. Engineering College with hands‑on experience in Java full‑stack development and cloud basics. Focused on building scalable, efficient solutions and contributing in agile teams.</p>
-        <div class="cards">
-          <div class="card" data-reveal><i class="fas fa-map-marker-alt"></i><span>Palakkad, Kerala</span></div>
-          <div class="card" data-reveal><i class="fas fa-graduation-cap"></i><span>B.E. CSE (2022–2026)</span></div>
-          <div class="card" data-reveal><i class="fas fa-trophy"></i><span>CGPA: 7.87 (6th Sem)</span></div>
-        </div>
-        <div class="tabs" data-reveal>
-          <div class="tab-headers">
-            <button class="tbtn active" data-tab="edu">Education</button>
-            <button class="tbtn" data-tab="certs">Certifications</button>
-            <button class="tbtn" data-tab="langs">Languages</button>
-          </div>
-            <div class="tab-body">
-            <div class="tpanel" id="edu" style="display:block">
-              <ul class="timeline">
-              <li class="titem">
-                <span class="dot"></span>
-                <h4>B.E. Computer Science & Engineering — V.S.B. Engineering College, Karur, Tamil Nadu</h4>
-                <div class="tdate">Nov 2022 – May 2026 (Expected)• CGPA: 7.87</div>
-                <p>Placement Coordinator</p>
-              </li>
-              <li class="titem">
-                <span class="dot"></span>
-                <h4>HSC — H.S.S. Sreekrishnapuram, Palakkad, Kerala</h4>
-                <div class="tdate">Aug 2020 – Mar 2022 • Score: 75%</div>
-                <p>NSS Leader</p>
-              </li>
-              <li class="titem">
-                <span class="dot"></span>
-                <h4>SSLC — H.S.S. Sreekrishnapuram, Palakkad, Kerala</h4>
-                <div class="tdate">Jun 2019 – Mar 2020 • Score: 99%</div>
-                <p>• School Leader</p>
-                <p>• Little KITEs (Kerala Infrastructure and Technology for Education) Student Representative</p>
-              </li>
-              </ul>
-            </div>
-            <div class="tpanel" id="certs" style="display:none">
-              <ul class="grid" style="grid-template-columns: repeat(2, 1fr); list-style: disc inside;">
-              <li class="card" style="justify-content:center;flex-direction:column">
-                <i class="fab fa-aws" style="font-size:2rem"></i>
-                <strong>AWS Cloud Operations</strong>
-              </li>
-              <li class="card" style="justify-content:center;flex-direction:column">
-                <i class="fas fa-shield-alt"></i>
-                <strong>IBM Cybersecurity</strong>
-              </li>
-              <li class="card" style="justify-content:center;flex-direction:column">
-                <i class="fab fa-java" style="font-size:2rem"></i>
-                <strong>Infosys Java Foundation</strong>
-              </li>
-              </ul>
-            </div>
-            <div class="tpanel" id="langs" style="display:none">
-              <ul class="grid" style="grid-template-columns: repeat(2, 1fr); list-style: none; gap: 1rem;">
-              <li class="card" style="justify-content:space-between;align-items:center;display:flex;">
-                <span><i class="fas fa-language" style="color:var(--primary);margin-right:.7rem;"></i>English</span>
-                <span class="pill">Advanced</span>
-              </li>
-              <li class="card" style="justify-content:space-between;align-items:center;display:flex;">
-                <span><i class="fas fa-language" style="color:var(--primary);margin-right:.7rem;"></i>Malayalam</span>
-                <span class="pill">Native</span>
-              </li>
-              <li class="card" style="justify-content:space-between;align-items:center;display:flex;">
-                <span><i class="fas fa-language" style="color:var(--primary);margin-right:.7rem;"></i>Tamil</span>
-                <span class="pill">Advanced</span>
-              </li>
-              <li class="card" style="justify-content:space-between;align-items:center;display:flex;">
-                <span><i class="fas fa-language" style="color:var(--primary);margin-right:.7rem;"></i>Hindi</span>
-                <span class="pill">Intermediate</span>
-              </li>
-              <li class="card" style="justify-content:space-between;align-items:center;display:flex;">
-                <span><i class="fas fa-language" style="color:var(--primary);margin-right:.7rem;"></i>Sanskrit</span>
-                <span class="pill">Basic</span>
-              </li>
-              </ul>
-            </div>
-            </div>
-        </div>
-      </div>
+    <!-- Mobile Fullscreen Menu -->
+    <div id="mobile-menu" class="fixed inset-0 z-40 bg-slate-900/98 backdrop-blur-xl flex flex-col items-center justify-center gap-8 opacity-0 pointer-events-none transition-all duration-300">
+        <button onclick="toggleMobileMenu()" class="absolute top-8 right-8 text-white sfx-click">
+            <i data-lucide="x" class="w-8 h-8"></i>
+        </button>
+        <a onclick="mobileNavClick('home')" class="text-3xl font-display font-bold text-white hover:text-sky-400 sfx-click">Home</a>
+        <a onclick="mobileNavClick('about')" class="text-3xl font-display font-bold text-white hover:text-sky-400 sfx-click">About</a>
+        <a onclick="mobileNavClick('projects')" class="text-3xl font-display font-bold text-white hover:text-sky-400 sfx-click">Projects</a>
+        <a onclick="mobileNavClick('music')" class="text-3xl font-display font-bold text-white hover:text-sky-400 sfx-click">Music Lab</a>
+        <a onclick="toggleResumeModal(); toggleMobileMenu();" class="text-3xl font-display font-bold text-white hover:text-sky-400 cursor-pointer sfx-click">Resume</a>
+        <a onclick="mobileNavClick('contact')" class="text-3xl font-display font-bold text-white hover:text-sky-400 sfx-click">Contact</a>
     </div>
-  </section>
 
-  <!-- SKILLS --><section id="skills">
-    <div class="container">
-      <div class="section-header" data-reveal>
-        <h2 class="section-title">Technical Skills</h2>
-        <p class="section-sub">Technologies I work with</p>
-      </div>
-      <div class="skillcats">
-        <div class="skillbox" data-reveal>
-          <h3>Programming</h3>
-          <div class="sgrid">
-            <div class="skill"><div class="sico"><i class="fab fa-java"></i></div><div>Java</div></div>
-            <div class="skill"><div class="sico"><i class="fas fa-database"></i></div><div>MySQL</div></div>
-          </div>
-        </div>
-        <div class="skillbox" data-reveal>
-          <h3>Frontend</h3>
-          <div class="sgrid">
-            <div class="skill"><div class="sico"><i class="fab fa-html5"></i></div><div>HTML</div></div>
-            <div class="skill"><div class="sico"><i class="fab fa-css3-alt"></i></div><div>CSS</div></div>
-            <div class="skill"><div class="sico"><i class="fas fa-leaf"></i></div><div>Thymeleaf</div></div>
-          </div>
-        </div>
-        <div class="skillbox" data-reveal>
-          <h3>Cloud & Tools</h3>
-          <div class="sgrid">
-            <div class="skill"><div class="sico"><i class="fab fa-aws"></i></div><div>AWS (Basics)</div></div>
-            <div class="skill"><div class="sico"><i class="fab fa-git-alt"></i></div><div>Git</div></div>
-            <div class="skill"><div class="sico"><i class="fab fa-github"></i></div><div>GitHub</div></div>
-            <div class="skill"><div class="sico"><i class="fas fa-tools"></i></div><div>STS 4</div></div>
-            <div class="skill"><div class="sico"><i class="fas fa-satellite-dish"></i></div><div>Postman</div></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- EXPERIENCE --><section id="experience" class="experience">
-    <div class="container">
-      <div class="section-header" data-reveal>
-        <h2 class="section-title">Experience</h2>
-        <p class="section-sub">My professional journey</p>
-      </div>
-      <div class="expcol">
-        <div class="exp" data-reveal>
-          <div class="ico"><i class="fas fa-code"></i></div>
-          <div>
-        <h3>Full‑Stack Java Developer Intern — Infosys Springboard</h3>
-        <div class="date">Feb 2025 – Apr 2025</div>
-        <p>
-          <img src="https://nscet.org/e-learning/files/info.png" alt="Tasty Treat Express project screenshot" style="width:100%;max-width:340px;border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,0.08);margin-bottom:1rem;display:block;">
-          Built “Tasty Treat Express” using Java & Spring within an agile team of 15.<br>
-          <strong>Responsibilities:</strong> Designed and implemented RESTful APIs, integrated MySQL database, and developed dynamic web pages using Thymeleaf.<br>
-          <strong>Collaboration:</strong> Worked closely with UI/UX designers and backend developers, participated in daily stand-ups, and contributed to sprint planning.<br>
-          <strong>Outcome:</strong> Delivered a fully functional food ordering platform with real-time order tracking and user authentication.
-        </p>
-        <div class="techs">
-          <span class="pill">Java</span>
-          <span class="pill">Spring Boot</span>
-          <span class="pill">Agile</span>
-        </div>
-          </div>
-        </div>
-        <div class="exp" data-reveal>
-          <div class="ico"><i class="fas fa-shield-alt"></i></div
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- PROJECTS --><section id="projects">
-    <div class="container">
-      <div class="section-header" data-reveal>
-      <h2 class="section-title">Featured Projects</h2>
-      <p class="section-sub">Some of my recent work</p>
-      </div>
-      <div class="section-controls" data-reveal style="text-align:center;margin-bottom:1rem;">
-      <div class="pill" style="display:inline-flex;gap:.5rem;align-items:center;">Filter:</div>
-      <div style="display:inline-flex;gap:.5rem;margin-left:.6rem;">
-        <button class="filter-btn pill" data-filter="all" aria-pressed="true">All</button>
-        <button class="filter-btn pill" data-filter="web">Web</button>
-        <button class="filter-btn pill" data-filter="java">Java</button>
-        <button class="filter-btn pill" data-filter="image">Cybersecurity</button>
-      </div>
-      </div>
-      <div class="pgrid">
-      <!-- Project 1: Tasty Treat Express -->
-      <div class="pcard" data-reveal data-category="web java" tabindex="0" aria-labelledby="proj1-title">
-        <div class="pimg" style="background: none; padding: 0;">
-        <img src="https://shyamfuture.com/wp-content/uploads/2024/09/food-delivery-app-development-company-.jpg" alt="Tasty Treat Express screenshot" style="width:100%;height:100%;object-fit:cover;display:block;">
-        <div class="pover">
-          <div class="plinks">
-          <a class="plink" href="https://github.com/SpringBoardMentor-443/Tasty-Treat-Express_Java.git" target="_blank" rel="noopener" aria-label="View source code on GitHub"><i class="fab fa-github"></i></a>
-          </div>
-        </div>
-        </div>
-        <div class="pbody">
-        <h3 id="proj1-title">Tasty Treat Express</h3>
-        <p>
-          <strong>Full-stack food ordering platform</strong> built with Java, Spring Boot, Thymeleaf, and MySQL.<br>
-          <strong>Features:</strong> Restaurant search, real-time order tracking, secure authentication, responsive UI, and seamless order management.<br>
-          <strong>Role:</strong> Designed RESTful APIs, integrated MySQL database, and collaborated in agile sprints to deliver a scalable solution.
-        </p>
-        <div class="techs">
-          <span class="pill">Java</span>
-          <span class="pill">Spring Boot</span>
-          <span class="pill">Thymeleaf</span>
-          <span class="pill">MySQL</span>
-          <span class="pill">Team Project</span>
-        </div>
-        </div>
-      </div>
-      <!-- Project 2: Steganography Tool -->
-      <div class="pcard" data-reveal data-category="image java" tabindex="0" aria-labelledby="proj2-title">
-        <div class="pimg" style="background: none; padding: 0;">
-        <img src="https://media.wired.com/photos/594db1736b76bb7625b89e48/master/pass/hidden_data-01.png" alt="Steganography Tool screenshot" style="width:100%;height:100%;object-fit:cover;display:block;">
-        <div class="pover">
-          <div class="plinks">
-          <a class="plink" href="https://github.com/ajith04-n/AICTE_Edunet-foundation-Cyber_security-IBM-Stegnography_project.git" target="_blank" rel="noopener" aria-label="View source code on GitHub"><i class="fab fa-github"></i></a>
-          </div>
-        </div>
-        </div>
+    <!-- Main Content -->
+    <main class="w-full max-w-[1600px] mx-auto px-8 sm:px-12 md:px-20 lg:px-32 py-28 md:py-36">
         
-        </div>
-      </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Project modal -->
-  <div id="project-modal" aria-hidden="true" style="display:none;position:fixed;inset:0;z-index:3000;align-items:center;justify-content:center;">
-    <div id="modal-overlay" style="position:absolute;inset:0;background:rgba(0,0,0,.5);"></div>
-    <div role="dialog" aria-modal="true" aria-labelledby="modal-title" style="background:var(--bg);color:var(--text);border-radius:12px;max-width:820px;width:92%;z-index:3001;padding:1.2rem;box-shadow:0 12px 40px rgba(0,0,0,.35);">
-      <div style="display:flex;justify-content:space-between;align-items:center;gap:1rem;">
-        <h3 id="modal-title">Project</h3>
-        <button id="modal-close" aria-label="Close project details" style="background:transparent;border:0;font-size:1.3rem;cursor:pointer;">&times;</button>
-      </div>
-      <div id="modal-body" style="margin-top:.8rem;">
-        <p id="modal-desc"></p>
-        <div id="modal-techs" style="margin-top:.6rem;"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- CONTACT --><section id="contact" class="contact">
-    <div class="container">
-      <div class="section-header" data-reveal>
-        <h2 class="section-title">Get In Touch</h2>
-        <p class="section-sub">Let's work together</p>
-      </div>
-      <div class="crow">
-        <div data-reveal>
-          <div class="citem">
-            <div class="cicon"><i class="fas fa-map-marker-alt"></i></div>
-            <div>
-              <h4>Location</h4>
-              <p>
-              <a href="https://share.google/AVtSiL9iWPVYUS5VR" target="_blank" style="color:inherit;text-decoration:underline;">
-                Palakkad, Kerala, India
-              </a>
-              </p>
-            </div>
-          </div>
-          <div class="citem">
-            <div class="cicon"><i class="fas fa-envelope"></i></div>
-            <div>
-              <h4>Email</h4>
-              <p>
-                <a href="https://mail.google.com/mail/?view=cm&fs=1&to=ajith04n@gmail.com" target="_blank" style="color:inherit;text-decoration:underline;">
-                  ajith04n@gmail.com
-                </a>
-              </p>
-            </div>
-          </div>
-          <div class="citem">
-            <div class="cicon"><i class="fas fa-phone"></i></div>
-            <div>
-              <h4>Phone</h4>
-              <p>+91 8590402953</p>
-            </div>
-          </div>
-        </div>
-        <form class="form" id="contact-form" data-reveal>
-          <div class="fg"><input type="text" placeholder="Your Name" required></div>
-          <div class="fg"><input type="email" placeholder="Your Email" required></div>
-          <div class="fg"><input type="text" placeholder="Subject" required></div>
-          <div class="fg"><textarea placeholder="Your Message" required></textarea></div>
-          <button class="btn btn-primary" type="submit"><i class="fas fa-paper-plane"></i> Send Message</button>
-        </form>
-      </div>
-    </div>
-  </section>
-  
-  <div class="toast" id="toast">Message sent! Thanks for reaching out.</div>
-
-  <!-- CHATBOT --><div class="chatbot-toggle" id="chatbot-btn"><i class="fas fa-comment-dots"></i></div>
-    <div class="chatbot-window" id="chatbot-window">
-      <div class="chatbot-header">
-        <img src="https://placehold.co/100x100/764ba2/fff?text=AI" alt="avatar">
-        <div>
-          <strong>Ajith's Assistant</strong><br>
-          <small>Ask me anything!</small>
-        </div>
-      </div>
-      <div class="chatbot-body" id="chat-body">
-        <div class="chatbot-msg from-bot">Hi there! 👋 I'm Ajith's assistant. Ask me anything about his skills, projects, or experience!</div>
-      </div>
-      <div class="chatbot-input">
-        <input type="text" id="chat-input" placeholder="Type a message...">
-        <button id="chat-send"><i class="fas fa-paper-plane"></i></button>
-      </div>
-    </div>
-
-  <!-- FOOTER --><footer class="footer">
-    <div class="container frow">
-      <p>© 2025 Ajith N. All rights reserved.</p>
-      <div class="flinks">
-          <a class="iconbtn" target="_blank" href="https://www.linkedin.com/in/ajith-n-bdcu1160/"><i class="fab fa-linkedin-in"></i></a>
-          <a class="iconbtn" target="_blank" href="https://github.com/ajith04-n"><i class="fab fa-github"></i></a>
-          <a class="iconbtn" target="_blank" href="https://leetcode.com/u/ajithn_">
-            <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/leetcode.svg" alt="LeetCode" style="width:22px;height:22px;display:block;filter:invert(48%) sepia(82%) saturate(749%) hue-rotate(16deg) brightness(98%) contrast(92%);">
-          </a>
-          <a class="iconbtn" target="_blank" href="https://www.credly.com/users/ajithn_">
-            <img src="https://www.svgrepo.com/show/331358/credly.svg" alt="Credly" style="width:22px;height:22px;display:block;">
-          </a>
-          <a class="iconbtn" target="_blank" href="https://www.hackerrank.com/profile/ajith04n"><i class="fab fa-hackerrank"></i></a>
-          <a class="iconbtn" target="_blank" href="https://www.instagram.com/ajithn_/"><i class="fab fa-instagram"></i></a>
-        </div>
-    </div>
-  </footer>
-
-  <!-- JS for interactions --><script>
-    document.addEventListener('DOMContentLoaded', () => {
-        // --- 1. THEME SWITCHER ---
-        const themeBtn = document.getElementById('theme-btn');
-        const html = document.documentElement;
-        const themes = ['light', 'dark', 'system'];
-        let currentThemeIndex = 0;
-
-        const setIcon = (theme) => {
-            const icon = themeBtn.querySelector('i');
-            if (theme === 'dark') icon.className = 'fas fa-moon';
-            else if (theme === 'light') icon.className = 'fas fa-sun';
-            else icon.className = 'fas fa-desktop';
-        };
-        
-        const applyTheme = (theme) => {
-            if (theme === 'system') {
-                const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-                html.dataset.theme = systemPrefersDark ? 'dark' : 'light';
-            } else {
-                html.dataset.theme = theme;
-            }
-            localStorage.setItem('theme', theme);
-            setIcon(theme);
-        };
-
-        const savedTheme = localStorage.getItem('theme') || 'system';
-        currentThemeIndex = themes.indexOf(savedTheme);
-        applyTheme(savedTheme);
-        
-        themeBtn.addEventListener('click', () => {
-            currentThemeIndex = (currentThemeIndex + 1) % themes.length;
-            applyTheme(themes[currentThemeIndex]);
-        });
-        
-        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
-            if (localStorage.getItem('theme') === 'system') {
-                applyTheme('system');
-            }
-        });
-
-        // --- 2. MOBILE MENU ---
-        const burger = document.getElementById('burger');
-        const menu = document.querySelector('.nav-menu');
-        burger.addEventListener('click', () => menu.classList.toggle('active'));
-        document.querySelectorAll('.nav-menu a').forEach(link => {
-            link.addEventListener('click', () => menu.classList.remove('active'));
-        });
-
-        // --- 3. TYPING EFFECT ---
-        const typingEl = document.querySelector('.typing');
-        const roles = ["Full Stack Java Developer", "Cloud Enthusiast", "Problem Solver"];
-        let roleIndex = 0, charIndex = 0, isDeleting = false;
-
-        function type() {
-            if(!typingEl) return;
-            const currentRole = roles[roleIndex];
-            if (isDeleting) {
-                typingEl.textContent = currentRole.substring(0, charIndex--);
-            } else {
-                typingEl.textContent = currentRole.substring(0, charIndex++);
-            }
-
-            if (!isDeleting && charIndex === currentRole.length) {
-                setTimeout(() => isDeleting = true, 2000);
-            } else if (isDeleting && charIndex === 0) {
-                isDeleting = false;
-                roleIndex = (roleIndex + 1) % roles.length;
-            }
-            setTimeout(type, isDeleting ? 50 : 100);
-        }
-        type();
-
-        // --- 4. TABS ---
-        document.querySelectorAll('.tbtn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                document.querySelectorAll('.tbtn').forEach(b => b.classList.remove('active'));
-                document.querySelectorAll('.tpanel').forEach(p => p.style.display = 'none');
-                btn.classList.add('active');
-                document.getElementById(btn.dataset.tab).style.display = 'block';
-            });
-        });
-
-        // --- 5. SCROLL REVEAL ANIMATION ---
-        const revealObserver = new IntersectionObserver((entries, observer) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.1 });
-        document.querySelectorAll('[data-reveal]').forEach(el => revealObserver.observe(el));
-
-        // --- 6. ACTIVE NAV LINK ON SCROLL ---
-        const sections = document.querySelectorAll('section[id]');
-        const navLinks = document.querySelectorAll('.nav-menu a');
-
-        const navObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const id = entry.target.getAttribute('id');
-                    navLinks.forEach(link => {
-                        link.classList.toggle('active', link.getAttribute('href') === `#${id}`);
-                    });
-                }
-            });
-        }, { rootMargin: '-50% 0px -50% 0px' });
-        sections.forEach(section => navObserver.observe(section));
-
-        // --- 7. CUSTOM CURSOR ---
-        const cursor = document.getElementById('cursor');
-        window.addEventListener('mousemove', e => {
-            cursor.style.left = e.clientX + 'px';
-            cursor.style.top = e.clientY + 'px';
-        });
-        document.querySelectorAll('a, button, input, textarea, .tbtn, .skill, .citem').forEach(el => {
-            el.addEventListener('mouseover', () => cursor.classList.add('hover'));
-            el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
-        });
-
-    // --- 8. CONTACT FORM: open mail client + toast notification ---
-    const form = document.getElementById('contact-form');
-    const toast = document.getElementById('toast');
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const [nameEl, emailEl, subjectEl, messageEl] = Array.from(form.elements).filter(n => n.tagName && (n.tagName.toLowerCase() === 'input' || n.tagName.toLowerCase() === 'textarea'));
-      const name = encodeURIComponent(nameEl.value || '');
-      const email = encodeURIComponent(emailEl.value || '');
-      const subject = encodeURIComponent(subjectEl.value || 'Contact from portfolio');
-      const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\n${messageEl.value}`);
-
-      // Open user's default mail client with prefilled content
-      const mailto = `mailto:ajith04n@gmail.com?subject=${subject}&body=${body}`;
-      window.location.href = mailto;
-
-      // Keep the visual feedback toast
-      toast.classList.add('show');
-      setTimeout(() => {
-        toast.classList.remove('show');
-        form.reset();
-      }, 3000);
-    });
-        
-        // --- 9. RULE-BASED CHATBOT ---
-        const chatBtn = document.getElementById('chatbot-btn');
-        const chatWin = document.getElementById('chatbot-window');
-        const chatBody = document.getElementById('chat-body');
-        const chatInput = document.getElementById('chat-input');
-        const chatSend = document.getElementById('chat-send');
-        
-        chatBtn.onclick = () => {
-            chatWin.style.display = (chatWin.style.display === 'flex') ? 'none' : 'flex';
-        };
-
-        const addMessage = (text, from = 'user') => {
-            const div = document.createElement('div');
-            div.className = `chatbot-msg from-${from}`;
-            div.textContent = text;
-            chatBody.appendChild(div);
-            chatBody.scrollTop = chatBody.scrollHeight;
-        };
-
-        const getBotReply = (userMsg) => {
-            const msg = userMsg.toLowerCase();
+        <!-- HERO SECTION (HOME) -->
+        <section id="home" class="min-h-[70vh] flex flex-col justify-center items-center relative overflow-hidden section-fade-in w-full">
             
-            if (msg.includes('project') || msg.includes('tasty') || msg.includes('food')) {
-                return "Ajith has worked on several projects, including 'Tasty Treat Express'—a Java Spring Boot food delivery system, a Food Ordering App, and a Steganography Tool. You can find more details in the projects section.";
-            }
-            if (msg.includes('skill') || msg.includes('tech') || msg.includes('language')) {
-                 return "Ajith's core technical skills include Java, Spring Boot, MySQL, HTML, CSS, and Thymeleaf. He also has basic knowledge of AWS and is proficient with tools like Git, GitHub, and Postman.";
-            }
-            if (msg.includes('contact') || msg.includes('email') || msg.includes('phone')) {
-                return "You can contact Ajith via email at ajith04n@gmail.com or by phone at +91 8590402953. His LinkedIn profile is also a great way to connect.";
-            }
-            if (msg.includes('cert')) {
-                return "Ajith holds certifications in AWS Cloud Operations, IBM Cybersecurity Fundamentals, and the Infosys Springboard Java Foundation. You can verify these on his Credly profile.";
-            }
-            if (msg.includes('edu') || msg.includes('college') || msg.includes('gpa')) {
-                return "Ajith is pursuing a B.E. in Computer Science at V.S.B. Engineering College, expecting to graduate in May 2026. His current CGPA is 7.87.";
-            }
-             if (msg.includes('intern') || msg.includes('experience')) {
-                return "He has completed two internships: one as a Full-Stack Java Developer at Infosys Springboard and another as a Cybersecurity Intern with IBM Skills Build.";
-            }
-            if (msg.includes('hello') || msg.includes('hi') || msg.includes('hey')) {
-                return "Hello! 👋 I'm Ajith's assistant. How can I help you today? You can ask me about his skills, projects, or experience.";
+            <div class="w-full grid md:grid-cols-2 gap-12 items-center relative z-10">
+                <div class="reveal active text-center md:text-left">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-sky-500/30 bg-sky-500/10 text-sky-400 text-xs font-semibold mb-6">
+                        <span class="relative flex h-2 w-2">
+                          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
+                          <span class="relative inline-flex rounded-full h-2 w-2 bg-sky-500"></span>
+                        </span>
+                        Available for Work
+                    </div>
+                    <h1 class="font-display text-5xl sm:text-6xl md:text-8xl font-bold leading-tight mb-6 text-white tracking-tight">
+                        AJITH <span class="text-sky-400">N.</span>
+                    </h1>
+                    <p class="text-lg md:text-xl text-slate-400 mb-8 max-w-lg leading-relaxed mx-auto md:mx-0">
+                        Full-Stack Java Developer. <br> Building robust systems with precision.
+                    </p>
+                    
+                    <div class="flex flex-wrap gap-4 mb-8 justify-center md:justify-start">
+                        <button onclick="switchSection('projects')" class="px-8 py-4 bg-sky-500 text-slate-900 rounded-lg font-bold hover:bg-sky-400 transition-all flex items-center gap-2 group sfx-click sfx-hover shadow-lg shadow-sky-500/20">
+                            View Work 
+                            <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+                        </button>
+                        <button onclick="switchSection('contact')" class="px-8 py-4 bg-slate-800 rounded-lg font-bold hover:bg-slate-700 transition-all text-white border border-slate-700 sfx-click sfx-hover">
+                            Contact Me
+                        </button>
+                    </div>
+
+                    <!-- Social Media Links (Hero) -->
+                    <div class="flex flex-wrap gap-4 items-center justify-center md:justify-start">
+                        <a href="https://www.linkedin.com/in/ajith-n-bdcu1160/" target="_blank" title="LinkedIn" class="social-link sfx-hover sfx-click"><i class="fab fa-linkedin-in text-lg"></i></a>
+                        <a href="https://github.com/ajith04-n" target="_blank" title="GitHub" class="social-link sfx-hover sfx-click"><i class="fab fa-github text-lg"></i></a>
+                        <a href="https://leetcode.com/u/ajithn_" target="_blank" title="LeetCode" class="social-link sfx-hover sfx-click"><img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/leetcode.svg" style="width:20px; filter:invert(1);"></a>
+                        <a href="https://www.credly.com/users/ajithn_" target="_blank" title="Credly" class="social-link sfx-hover sfx-click"><img src="https://www.svgrepo.com/show/331358/credly.svg" style="width:20px;"></a>
+                        <a href="https://www.hackerrank.com/profile/ajith04n" target="_blank" title="HackerRank" class="social-link sfx-hover sfx-click"><i class="fab fa-hackerrank text-lg"></i></a>
+                        <a href="https://www.instagram.com/ajithn_/" target="_blank" title="Instagram" class="social-link sfx-hover sfx-click"><i class="fab fa-instagram text-lg"></i></a>
+                    </div>
+                </div>
+
+                <!-- Abstract Visual -->
+                <div class="relative hidden md:block reveal delay-200 active">
+                    <div class="glass-panel p-6 rounded-2xl relative z-10">
+                        <div class="flex justify-between items-center mb-4 border-b border-slate-700 pb-4">
+                            <div class="flex gap-2 items-center">
+                                <div class="w-3 h-3 rounded-full bg-slate-600"></div>
+                                <div class="w-3 h-3 rounded-full bg-slate-600"></div>
+                                <div class="w-3 h-3 rounded-full bg-slate-600"></div>
+                                <div class="ml-3 text-xs text-slate-400 font-mono uppercase tracking-widest">Tasks</div>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <button id="add-note-btn" class="px-3 py-1 rounded bg-sky-500 text-slate-900 font-bold text-xs flex items-center gap-2 hover:bg-sky-400 sfx-click">
+                                    <i data-lucide="plus" class="w-3 h-3"></i>
+                                    New Note
+                                </button>
+                            </div>
+                        </div>
+
+                        <div id="sticky-board" class="grid grid-cols-2 gap-4 auto-rows-min max-h-[380px] overflow-auto pr-2">
+                            <!-- Notes injected here -->
+                        </div>
+                    </div>
+
+                        <!-- Note Editor (hidden by default) -->
+                        <div id="note-editor" class="fixed inset-0 z-50 flex items-center justify-center p-6 hidden">
+                            <div class="w-full max-w-lg glass-panel p-6 rounded-xl shadow-2xl bg-slate-800">
+                                <div class="flex justify-between items-center mb-4">
+                                    <div class="text-sm font-bold text-white">Edit Note</div>
+                                    <div class="flex items-center gap-2">
+                                        <select id="note-color" class="bg-slate-700 border border-slate-600 text-white text-xs px-2 py-1 rounded">
+                                            <option value="bg-yellow-100">Yellow</option>
+                                            <option value="bg-sky-100">Blue</option>
+                                            <option value="bg-green-100">Green</option>
+                                            <option value="bg-white">White</option>
+                                        </select>
+                                        <button id="close-editor" class="text-sm px-3 py-1 rounded bg-slate-700 hover:bg-slate-600 text-white sfx-click">Close</button>
+                                    </div>
+                                </div>
+                                <textarea id="note-text" class="w-full h-36 p-3 rounded bg-slate-900 border border-slate-700 text-slate-300 resize-none focus:outline-none focus:border-sky-500" placeholder="Write something..."></textarea>
+                                <div class="flex justify-end gap-2 mt-4">
+                                    <button id="save-note" class="px-4 py-2 rounded bg-sky-500 text-slate-900 font-bold sfx-click hover:bg-sky-400">Save Note</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <style>
+                            /* Clean sticky notes */
+                            .sticky-note { 
+                                transform-origin: center; 
+                                transition: transform 0.2s, box-shadow 0.2s;
+                                color: #1e293b; /* Dark text for light notes */
+                            }
+                            .sticky-note:hover {
+                                z-index: 10;
+                                box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2);
+                            }
+                        </style>
+
+                        <script>
+                            (function(){
+                                const STORAGE_KEY = 'ajith_notes_v3';
+                                const board = document.getElementById('sticky-board');
+                                const addBtn = document.getElementById('add-note-btn');
+                                const editor = document.getElementById('note-editor');
+                                const noteText = document.getElementById('note-text');
+                                const noteColor = document.getElementById('note-color');
+                                const saveBtn = document.getElementById('save-note');
+                                const closeEditor = document.getElementById('close-editor');
+
+                                if (!board) { console.warn('Sticky board missing'); return; }
+
+                                let notes = [];
+                                let editingId = null;
+
+                                function loadNotes() {
+                                    try {
+                                        const raw = localStorage.getItem(STORAGE_KEY);
+                                        notes = raw ? JSON.parse(raw) : [];
+                                    } catch (err) { console.warn('loadNotes error', err); notes = []; }
+                                }
+
+                                function saveNotes() {
+                                    try {
+                                        localStorage.setItem(STORAGE_KEY, JSON.stringify(notes));
+                                        localStorage.setItem(STORAGE_KEY + '_ts', Date.now());
+                                    } catch (err) { console.warn('saveNotes error', err); }
+                                }
+
+                                function render() {
+                                    board.innerHTML = '';
+                                    if (!notes || notes.length === 0) {
+                                        const empty = document.createElement('div');
+                                        empty.className = 'text-slate-500 text-sm col-span-2 py-12 text-center border-2 border-dashed border-slate-700 rounded-xl';
+                                        empty.innerText = 'No notes active.\nClick "New Note" to organize.';
+                                        board.appendChild(empty);
+                                        return;
+                                    }
+
+                                    notes.forEach((n, i) => {
+                                        const note = document.createElement('div');
+                                        note.className = 'relative p-4 rounded shadow-sm sticky-note min-h-[100px] border border-black/5';
+                                        note.dataset.id = n.id;
+                                        // apply color (either tailwind class or inline)
+                                        if (/^bg-/.test(n.color || '')) note.classList.add(n.color);
+                                        else note.style.background = n.color || '#f1f5f9';
+                                        
+                                        // Slight random rotation for "desk" feel, but less chaotic
+                                        const rot = (i % 2 === 0 ? 1 : -1); 
+                                        note.style.transform = `rotate(${rot}deg)`;
+
+                                        // tools
+                                        const tools = document.createElement('div');
+                                        tools.className = 'absolute top-2 right-2 flex gap-1 items-center opacity-0 hover:opacity-100 transition-opacity';
+                                        note.onmouseenter = () => tools.classList.remove('opacity-0');
+                                        note.onmouseleave = () => tools.classList.add('opacity-0');
+
+                                        const editBtn = document.createElement('button');
+                                        editBtn.type = 'button';
+                                        editBtn.className = 'edit-note text-xs p-1 rounded bg-black/10 hover:bg-black/20 sfx-click';
+                                        editBtn.innerHTML = '<i data-lucide="edit-2" class="w-3 h-3"></i>';
+
+                                        const delBtn = document.createElement('button');
+                                        delBtn.type = 'button';
+                                        delBtn.className = 'delete-note text-xs p-1 rounded bg-red-500/10 text-red-600 hover:bg-red-500 hover:text-white sfx-click';
+                                        delBtn.innerText = '×';
+
+                                        tools.appendChild(editBtn);
+                                        tools.appendChild(delBtn);
+                                        note.appendChild(tools);
+
+                                        const content = document.createElement('div');
+                                        content.className = 'whitespace-pre-wrap text-xs font-medium text-slate-800 font-sans leading-relaxed';
+                                        content.innerText = n.text || '';
+                                        note.appendChild(content);
+
+                                        // double-click to edit
+                                        note.addEventListener('dblclick', () => openEditor(n.id));
+
+                                        board.appendChild(note);
+                                    });
+
+                                    if (window.lucide) lucide.createIcons();
+                                }
+
+                                // delegation
+                                board.addEventListener('click', (e) => {
+                                    const edit = e.target.closest('.edit-note');
+                                    const del = e.target.closest('.delete-note');
+                                    if (edit) {
+                                        const el = edit.closest('.sticky-note');
+                                        if (el && el.dataset.id) openEditor(el.dataset.id);
+                                    }
+                                    if (del) {
+                                        const el = del.closest('.sticky-note');
+                                        if (el && el.dataset.id) deleteNote(el.dataset.id);
+                                    }
+                                });
+
+                                function addNote() {
+                                    const id = Date.now().toString(36);
+                                    const note = { id, text: 'New task...', color: 'bg-yellow-100', created: Date.now(), updated: Date.now() };
+                                    notes.unshift(note);
+                                    saveNotes();
+                                    render();
+                                    openEditor(id);
+                                }
+
+                                function openEditor(id) {
+                                    const n = notes.find(x => x.id === id);
+                                    if (!n) return;
+                                    editingId = id;
+                                    if (noteText) noteText.value = n.text || '';
+                                    if (noteColor) noteColor.value = n.color || 'bg-yellow-100';
+                                    if (editor) editor.classList.remove('hidden');
+                                }
+
+                                function closeEditorUI() { editingId = null; if (editor) editor.classList.add('hidden'); }
+
+                                function saveEditedNote() {
+                                    if (!editingId) return;
+                                    const n = notes.find(x => x.id === editingId);
+                                    if (!n) return;
+                                    n.text = noteText.value || n.text;
+                                    n.color = noteColor.value || n.color;
+                                    n.updated = Date.now();
+                                    saveNotes();
+                                    render();
+                                    closeEditorUI();
+                                }
+
+                                function deleteNote(id) {
+                                    if (!confirm('Delete this note?')) return;
+                                    notes = notes.filter(n => n.id !== id);
+                                    saveNotes();
+                                    render();
+                                }
+
+                                // storage sync
+                                window.addEventListener('storage', (e) => {
+                                    if (e.key === STORAGE_KEY || e.key === STORAGE_KEY + '_ts') { loadNotes(); render(); }
+                                });
+
+                                // listeners
+                                if (addBtn) addBtn.addEventListener('click', addNote);
+                                if (saveBtn) saveBtn.addEventListener('click', saveEditedNote);
+                                if (closeEditor) closeEditor.addEventListener('click', closeEditorUI);
+                                if (editor) editor.addEventListener('click', (ev) => { if (ev.target === editor) closeEditorUI(); });
+
+                                // init
+                                loadNotes();
+                                render();
+                            })();
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ABOUT SECTION -->
+        <section id="about" class="min-h-[70vh] flex flex-col justify-center hidden section-fade-in w-full">
+            <div class="w-full">
+                <div class="mb-16 reveal active text-center md:text-left">
+                    <h2 class="font-display text-4xl md:text-5xl font-bold mb-4 text-white">About <span class="text-slate-500">Me</span></h2>
+                    <div class="h-1 w-20 bg-sky-500 rounded-full mx-auto md:mx-0 mb-8"></div>
+                    
+                    <!-- Professional Summary -->
+                    <p class="text-slate-300 text-lg leading-relaxed max-w-4xl border-l-4 border-sky-500 pl-6 bg-slate-800/50 p-6 rounded-r-lg">
+                        Computer Science student skilled in Java, MySQL and web development. Experienced as a Full-Stack Developer Intern, with a background in building applications and leading campus initiatives. Strong communicator with hands-on expertise in RESTful APIs, backend operations, and cloud basics (AWS). Quick learner dedicated to teamwork, problem-solving, and continuous growth.
+                    </p>
+                </div>
+
+                <!-- 1. Experience & Leadership -->
+                <div class="mb-16 reveal active">
+                     <h3 class="text-2xl font-bold mb-8 flex items-center justify-center md:justify-start gap-2 text-white">
+                        <i data-lucide="briefcase" class="text-sky-500"></i> Experience & Leadership
+                    </h3>
+                    
+                    <!-- Internship -->
+                    <div class="glass-panel p-8 rounded-2xl relative overflow-hidden group mb-8 border-l-4 border-l-sky-500 sfx-hover hover:border-sky-400">
+                        <div class="flex flex-col md:flex-row md:items-center justify-between mb-4">
+                            <div>
+                                <h4 class="text-xl font-bold text-white">Full-Stack Java Developer Intern</h4>
+                                <p class="text-sky-400 font-medium">Infosys Springboard (Remote)</p>
+                            </div>
+                            <span class="px-4 py-1 rounded bg-slate-800 border border-slate-700 text-sm text-slate-300 mt-2 md:mt-0 w-fit">Feb 2025 - Apr 2025</span>
+                        </div>
+                        <ul class="space-y-2 text-slate-300 list-disc list-inside">
+                            <li>Developed "Tasty Treat Express", a robust full-stack food ordering platform using <strong>Java, Spring Boot, and MySQL</strong>.</li>
+                            <li>Implemented RESTful APIs and MVC architecture for seamless data handling.</li>
+                            <li>Collaborated with a 15-member agile team to optimize backend efficiency and frontend responsiveness.</li>
+                        </ul>
+                    </div>
+
+                <!-- 2. Skills Grid (4 BOX MODEL) -->
+                <div class="mb-16 reveal active">
+                    <h3 class="text-2xl font-bold mb-8 flex items-center justify-center gap-2 text-white">
+                        <i data-lucide="cpu" class="text-sky-500"></i> Technical Skills
+                    </h3>
+                    
+                    <!-- 4 Column Grid for 4 Categories -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                        
+                        <!-- Box 1: Programming -->
+                        <div class="glass-panel p-6 rounded-2xl flex flex-col h-full border border-slate-700 hover:border-sky-500/50 transition-colors sfx-hover">
+                            <h4 class="text-lg font-bold text-center mb-6 text-sky-200">Programming</h4>
+                            <div class="grid grid-cols-2 gap-3">
+                                <div class="skill-block p-4 rounded-xl flex flex-col items-center justify-center transition-all cursor-default">
+                                    <div class="icon-circle">
+                                        <i class="devicon-java-plain colored text-2xl"></i>
+                                    </div>
+                                    <span class="text-xs font-medium text-slate-200">Java</span>
+                                </div>
+                                <div class="skill-block p-4 rounded-xl flex flex-col items-center justify-center transition-all cursor-default">
+                                    <div class="icon-circle">
+                                        <i class="devicon-mysql-plain colored text-2xl"></i>
+                                    </div>
+                                    <span class="text-xs font-medium text-slate-200">MySQL</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Box 2: Frontend -->
+                        <div class="glass-panel p-6 rounded-2xl flex flex-col h-full border border-slate-700 hover:border-sky-500/50 transition-colors sfx-hover">
+                            <h4 class="text-lg font-bold text-center mb-6 text-blue-200">Frontend</h4>
+                            <div class="grid grid-cols-2 gap-3">
+                                <div class="skill-block p-4 rounded-xl flex flex-col items-center justify-center transition-all cursor-default">
+                                    <div class="icon-circle">
+                                        <i class="devicon-html5-plain colored text-2xl"></i>
+                                    </div>
+                                    <span class="text-xs font-medium text-slate-200">HTML</span>
+                                </div>
+                                <div class="skill-block p-4 rounded-xl flex flex-col items-center justify-center transition-all cursor-default">
+                                    <div class="icon-circle">
+                                        <i class="devicon-css3-plain colored text-2xl"></i>
+                                    </div>
+                                    <span class="text-xs font-medium text-slate-200">CSS</span>
+                                </div>
+                                <div class="skill-block p-4 rounded-xl flex flex-col items-center justify-center transition-all cursor-default col-span-2">
+                                    <div class="icon-circle">
+                                        <i data-lucide="leaf" class="text-green-500 w-6 h-6"></i>
+                                    </div>
+                                    <span class="text-xs font-medium text-slate-200">Thymeleaf</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Box 3: Backend -->
+                        <div class="glass-panel p-6 rounded-2xl flex flex-col h-full border border-slate-700 hover:border-sky-500/50 transition-colors sfx-hover">
+                            <h4 class="text-lg font-bold text-center mb-6 text-orange-200">Backend</h4>
+                            <div class="grid grid-cols-2 gap-3">
+                                <div class="skill-block p-4 rounded-xl flex flex-col items-center justify-center transition-all cursor-default col-span-2">
+                                    <div class="icon-circle">
+                                        <i class="devicon-spring-plain colored text-2xl"></i>
+                                    </div>
+                                    <span class="text-xs font-medium text-slate-200">Spring Boot</span>
+                                </div>
+                                <div class="skill-block p-4 rounded-xl flex flex-col items-center justify-center transition-all cursor-default">
+                                    <div class="icon-circle">
+                                        <i class="devicon-mysql-plain colored text-2xl"></i>
+                                    </div>
+                                    <span class="text-xs font-medium text-slate-200">JPA</span>
+                                </div>
+                                <div class="skill-block p-4 rounded-xl flex flex-col items-center justify-center transition-all cursor-default">
+                                    <div class="icon-circle">
+                                        <i data-lucide="server" class="text-indigo-400 w-6 h-6"></i>
+                                    </div>
+                                    <span class="text-xs font-medium text-slate-200">REST API</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Box 4: Tools -->
+                        <div class="glass-panel p-6 rounded-2xl flex flex-col h-full border border-slate-700 hover:border-sky-500/50 transition-colors sfx-hover">
+                            <h4 class="text-lg font-bold text-center mb-6 text-slate-200">Tools</h4>
+                            <div class="grid grid-cols-2 gap-3">
+                                <div class="skill-block p-4 rounded-xl flex flex-col items-center justify-center transition-all cursor-default">
+                                    <div class="icon-circle">
+                                        <i class="devicon-git-plain colored text-2xl"></i>
+                                    </div>
+                                    <span class="text-xs font-medium text-slate-200">Git</span>
+                                </div>
+                                <div class="skill-block p-4 rounded-xl flex flex-col items-center justify-center transition-all cursor-default">
+                                    <div class="icon-circle">
+                                        <i class="devicon-github-original text-white text-2xl"></i>
+                                    </div>
+                                    <span class="text-xs font-medium text-slate-200">GitHub</span>
+                                </div>
+                                <div class="skill-block p-4 rounded-xl flex flex-col items-center justify-center transition-all cursor-default">
+                                    <div class="icon-circle">
+                                        <i class="devicon-postman-plain colored text-2xl"></i>
+                                    </div>
+                                    <span class="text-xs font-medium text-slate-200">Postman</span>
+                                </div>
+                                <div class="skill-block p-4 rounded-xl flex flex-col items-center justify-center transition-all cursor-default">
+                                    <div class="icon-circle">
+                                        <i class="devicon-amazonwebservices-plain colored text-2xl"></i>
+                                    </div>
+                                    <span class="text-xs font-medium text-slate-200">AWS</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="grid lg:grid-cols-2 gap-12">
+                    <!-- 3. Education Timeline -->
+                    <div class="reveal active">
+                         <h3 class="text-2xl font-bold mb-6 flex items-center justify-center md:justify-start gap-2 text-white">
+                            <i data-lucide="graduation-cap" class="text-sky-500"></i> Education
+                        </h3>
+                        <!-- Timeline Container -->
+                        <div class="relative pl-8 border-l border-slate-700 space-y-12 ml-2 md:ml-4">
+                            
+                            <!-- B.E. -->
+                            <div class="relative group">
+                                <div class="absolute -left-[41px] md:-left-[43px] top-1 h-5 w-5 rounded-full bg-slate-900 border-4 border-sky-500 timeline-dot shadow-[0_0_10px_rgba(56,189,248,0.3)]"></div>
+                                <h4 class="text-lg font-bold text-white group-hover:text-sky-400 transition-colors">B.E. Computer Science & Engineering <span class="text-slate-400 font-normal text-base block md:inline">— V.S.B. Engineering College, Karur, Tamil Nadu</span></h4>
+                                <p class="text-sky-400 font-medium mt-1">Nov 2022 - May 2026 (Expected) • CGPA: 7.87</p>
+                                <p class="text-slate-400 text-sm mt-1">Placement Coordinator</p>
+                            </div>
+
+                            <!-- HSC -->
+                            <div class="relative group">
+                                <div class="absolute -left-[41px] md:-left-[43px] top-1 h-5 w-5 rounded-full bg-slate-900 border-4 border-sky-500 timeline-dot shadow-[0_0_10px_rgba(56,189,248,0.3)]"></div>
+                                <h4 class="text-lg font-bold text-white group-hover:text-sky-400 transition-colors">HSC <span class="text-slate-400 font-normal text-base block md:inline">— H.S.S. Sreekrishnapuram, Palakkad, Kerala</span></h4>
+                                <p class="text-sky-400 font-medium mt-1">Aug 2020 - Mar 2022 • Score: 75%</p>
+                                <p class="text-slate-400 text-sm mt-1">NSS Leader</p>
+                            </div>
+
+                            <!-- SSLC -->
+                            <div class="relative group">
+                                <div class="absolute -left-[41px] md:-left-[43px] top-1 h-5 w-5 rounded-full bg-slate-900 border-4 border-sky-500 timeline-dot shadow-[0_0_10px_rgba(56,189,248,0.3)]"></div>
+                                <h4 class="text-lg font-bold text-white group-hover:text-sky-400 transition-colors">SSLC <span class="text-slate-400 font-normal text-base block md:inline">— H.S.S. Sreekrishnapuram, Palakkad, Kerala</span></h4>
+                                <p class="text-sky-400 font-medium mt-1">Jun 2019 - Mar 2020 • Score: 99%</p>
+                                <ul class="list-disc list-inside text-slate-400 text-sm mt-1 space-y-1">
+                                    <li>School Leader</li>
+                                    <li>Little KITEs (Kerala Infrastructure and Technology for Education) Student Representative</li>
+                                </ul>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- Certifications & Languages containers -->
+                    <div class="reveal active delay-100">
+                        <div class="space-y-6">
+                            <div>
+                                <h3 class="text-2xl font-bold mb-4 flex items-center md:justify-start gap-2 text-white">
+                                    <i data-lucide="award" class="text-sky-500"></i> Certifications
+                                </h3>
+                                <div class="grid gap-4">
+                                    <div class="glass-panel p-4 rounded-xl flex items-center gap-4 hover:border-sky-500/50 transition-colors cursor-default sfx-hover">
+                                        <div class="p-2 bg-orange-500/10 rounded-lg text-orange-400 flex-shrink-0 border border-orange-500/20">
+                                            <i data-lucide="cloud" class="w-6 h-6"></i>
+                                        </div>
+                                        <div>
+                                            <h4 class="font-bold text-white text-sm">AWS Cloud Operations</h4>
+                                            <p class="text-xs text-slate-500">Amazon Web Services</p>
+                                        </div>
+                                    </div>
+                                    <div class="glass-panel p-4 rounded-xl flex items-center gap-4 hover:border-sky-500/50 transition-colors cursor-default sfx-hover">
+                                        <div class="p-2 bg-blue-500/10 rounded-lg text-blue-400 flex-shrink-0 border border-blue-500/20">
+                                            <i data-lucide="award" class="w-6 h-6"></i>
+                                        </div>
+                                        <div>
+                                            <h4 class="font-bold text-white text-sm">TCS iON Career Edge</h4>
+                                            <p class="text-xs text-slate-500">Tata Consultancy Services</p>
+                                        </div>
+                                    </div>
+                                    <div class="glass-panel p-4 rounded-xl flex items-center gap-4 hover:border-sky-500/50 transition-colors cursor-default sfx-hover">
+                                        <div class="p-2 bg-purple-500/10 rounded-lg text-purple-400 flex-shrink-0 border border-purple-500/20">
+                                            <i data-lucide="code-2" class="w-6 h-6"></i>
+                                        </div>
+                                        <div>
+                                            <h4 class="font-bold text-white text-sm">Java Foundation</h4>
+                                            <p class="text-xs text-slate-500">Infosys Springboard</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <h3 class="text-2xl font-bold mb-4">Languages</h3>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div class="glass-panel p-4 rounded-xl flex items-center justify-between sfx-hover">
+                                        <div>
+                                            <div class="font-bold">English</div>
+                                            <div class="text-xs text-slate-400">Advanced</div>
+                                        </div>
+                                    </div>
+                                    <div class="glass-panel p-4 rounded-xl flex items-center justify-between sfx-hover">
+                                        <div>
+                                            <div class="font-bold">Malayalam</div>
+                                            <div class="text-xs text-slate-400">Native</div>
+                                        </div>
+                                    </div>
+                                    <div class="glass-panel p-4 rounded-xl flex items-center justify-between sfx-hover">
+                                        <div>
+                                            <div class="font-bold">Tamil</div>
+                                            <div class="text-xs text-slate-400">Advanced</div>
+                                        </div>
+                                    </div>
+                                    <div class="glass-panel p-4 rounded-xl flex items-center justify-between sfx-hover">
+                                        <div>
+                                            <div class="font-bold">Hindi</div>
+                                            <div class="text-xs text-slate-400">Intermediate</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- PROJECTS SECTION -->
+        <section id="projects" class="min-h-[70vh] flex flex-col justify-center hidden section-fade-in w-full">
+            <div class="w-full">
+                <div class="flex flex-col md:flex-row justify-between items-end mb-16 reveal active text-center md:text-left">
+                    <div class="w-full">
+                        <h2 class="font-display text-4xl md:text-5xl font-bold mb-4 text-white">Featured <span class="text-sky-400">Works</span></h2>
+                        <p class="text-slate-400">Architecting solutions one line of code at a time.</p>
+                    </div>
+                </div>
+
+                <!-- Featured Project (Single) -->
+                <div class="max-w-4xl mx-auto tilt-card glass-panel rounded-2xl p-8 md:p-12 group relative overflow-hidden reveal active sfx-hover">
+                    <div class="absolute inset-0 bg-gradient-to-br from-sky-500/5 to-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    
+                    <div class="relative z-10 flex flex-col md:flex-row gap-8">
+                        <div class="flex-1">
+                            <div class="flex justify-between items-start mb-6">
+                                <div class="p-4 bg-slate-900 rounded-xl border border-slate-700 group-hover:border-sky-500/50 transition-colors">
+                                    <i data-lucide="utensils" class="w-8 h-8 text-white"></i>
+                                </div>
+                                <div class="flex gap-2">
+                                    <span class="px-3 py-1 rounded bg-sky-500/10 text-sky-300 text-xs font-bold border border-sky-500/20">Internship Project</span>
+                                </div>
+                            </div>
+                            
+                            <h3 class="text-3xl font-bold text-white mb-4 group-hover:text-sky-400 transition-colors">Tasty Treat Express</h3>
+                            
+                            <p class="text-slate-400 mb-6 leading-relaxed">
+                                A comprehensive full-stack food ordering platform developed during my internship at Infosys Springboard. 
+                                It features a robust MVC architecture with secure user authentication, dynamic menu management, and real-time order processing.
+                            </p>
+
+                            <div class="space-y-4 mb-8">
+                                <div class="flex items-center gap-3 text-sm text-slate-300">
+                                    <i data-lucide="check-circle-2" class="text-green-500 w-4 h-4"></i>
+                                    Implemented RESTful APIs for seamless data flow.
+                                </div>
+                                <div class="flex items-center gap-3 text-sm text-slate-300">
+                                    <i data-lucide="check-circle-2" class="text-green-500 w-4 h-4"></i>
+                                    Integrated Spring Data JPA for efficient MySQL operations.
+                                </div>
+                                <div class="flex items-center gap-3 text-sm text-slate-300">
+                                    <i data-lucide="check-circle-2" class="text-green-500 w-4 h-4"></i>
+                                    Collaborated with a 15-member agile team.
+                                </div>
+                            </div>
+
+                            <div class="flex flex-wrap gap-2 mb-8">
+                                <span class="px-3 py-1 rounded bg-slate-800 text-xs font-mono text-sky-200 border border-slate-700">Java</span>
+                                <span class="px-3 py-1 rounded bg-slate-800 text-xs font-mono text-sky-200 border border-slate-700">Spring Boot</span>
+                                <span class="px-3 py-1 rounded bg-slate-800 text-xs font-mono text-sky-200 border border-slate-700">MySQL</span>
+                                <span class="px-3 py-1 rounded bg-slate-800 text-xs font-mono text-sky-200 border border-slate-700">Thymeleaf</span>
+                            </div>
+
+                            <a href="https://github.com/SpringBoardMentor-443/Tasty-Treat-Express_Java" target="_blank" class="inline-flex items-center gap-2 text-sm font-bold text-white hover:text-sky-400 transition-colors bg-slate-800 px-6 py-3 rounded-lg hover:bg-slate-700 border border-slate-700 sfx-click">
+                                View my github <i data-lucide="github" class="w-4 h-4"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- MUSIC SECTION -->
+        <section id="music" class="min-h-[70vh] flex flex-col justify-center py-12 relative overflow-hidden hidden section-fade-in w-full">
+            <div class="w-full relative z-10">
+                <div class="mb-12 reveal active text-center md:text-left">
+                    <h2 class="font-display text-4xl md:text-5xl font-bold mb-4 text-white">JHOOM <span class="text-sky-400">Playground</span></h2>
+                    <p class="text-slate-400">My coding playlist. Powered by Spotify API.</p>
+                </div>
+
+                <div class="glass-panel rounded-2xl p-2 md:p-8 border-slate-700 reveal active">
+                    <div class="grid md:grid-cols-2 gap-8">
+                        
+                        <!-- Left: Visual Player -->
+                        <div class="flex flex-col gap-6">
+                            <div class="relative group w-full aspect-square md:aspect-video rounded-xl overflow-hidden bg-black shadow-2xl">
+                                <iframe id="spotify-iframe" class="w-full h-full" src="" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+                                <!-- API Status Indicator -->
+                                <div id="api-status" class="absolute top-4 left-4 z-20 hidden"></div>
+                            </div>
+                            
+                            <div class="hidden md:flex items-center justify-between px-4">
+                                <div class="flex items-center gap-3">
+                                    <div class="flex items-end gap-1 h-6">
+                                        <div class="bar"></div>
+                                        <div class="bar"></div>
+                                        <div class="bar"></div>
+                                        <div class="bar"></div>
+                                    </div>
+                                    <span class="text-xs font-mono text-sky-400 animate-pulse">LIVE PREVIEW</span>
+                                </div>
+                                <div class="text-xs text-slate-500">Requires Spotify Login for Full Track</div>
+                            </div>
+                        </div>
+
+                        <!-- Right: Interactive Library -->
+                        <div class="flex flex-col h-full min-h-[400px]">
+                            <form id="search-form" class="relative mb-6">
+                                <input id="search-input" type="text" placeholder="Search tracks..." 
+                                    class="w-full bg-slate-900 border border-slate-700 text-white px-5 py-4 rounded-xl pl-12 focus:outline-none focus:bg-slate-800 focus:border-sky-500 transition-all font-sans placeholder:text-slate-600">
+                                <i data-lucide="search" class="absolute left-4 top-4 text-slate-500 w-5 h-5"></i>
+                            </form>
+
+                            <div class="flex-1 overflow-y-auto pr-2 custom-scrollbar space-y-2" id="playlist-container">
+                                <!-- Tracks Injected Here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- UPDATED CONTACT SECTION -->
+        <section id="contact" class="min-h-[70vh] py-12 hidden section-fade-in flex flex-col w-full">
+            <div class="w-full max-w-7xl mx-auto reveal active">
+                
+                <h2 class="font-display text-4xl md:text-6xl font-bold text-white mb-12 text-center">
+                    Let's work <span class="text-sky-500">together</span>
+                </h2>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+                    
+                    <!-- Left Column: Details & Chat Board -->
+                    <div class="flex flex-col gap-6 h-full">
+                        
+                        <!-- Contact Details -->
+                        <div class="space-y-4">
+                            <!-- Location Card -->
+                            <a href="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3917.6449118539235!2d76.36279637512996!3d10.914567656630254!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ba7d7d9d7838b0d%3A0xd8321d242c62120f!2sCHALIKUNDU%2C%20KUTTANASSERY!5e0!3m2!1sen!2sin!4v1764956750118!5m2!1sen!2sin" target="_blank" class="glass-panel p-4 md:p-6 rounded-2xl flex items-center gap-6 group hover:border-sky-500/50 transition-all cursor-pointer sfx-hover sfx-click">
+                                <div class="w-12 h-12 md:w-14 md:h-14 rounded-full bg-slate-900 flex items-center justify-center text-sky-500 group-hover:scale-110 transition-transform">
+                                    <i data-lucide="map-pin" class="w-5 h-5 md:w-6 md:h-6"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-slate-400 text-sm font-semibold uppercase tracking-wider mb-1">Location</h3>
+                                    <p class="text-lg md:text-xl font-bold text-white group-hover:text-sky-400 transition-colors">Palakkad, Kerala, India</p>
+                                </div>
+                            </a>
+
+                            <!-- Email Card -->
+                            <a href="mailto:ajith04n@gmail.com" class="glass-panel p-4 md:p-6 rounded-2xl flex items-center gap-6 group hover:border-sky-500/50 transition-all cursor-pointer sfx-hover sfx-click">
+                                <div class="w-12 h-12 md:w-14 md:h-14 rounded-full bg-slate-900 flex items-center justify-center text-sky-500 group-hover:scale-110 transition-transform">
+                                    <i data-lucide="mail" class="w-5 h-5 md:w-6 md:h-6"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-slate-400 text-sm font-semibold uppercase tracking-wider mb-1">Email</h3>
+                                    <p class="text-lg md:text-xl font-bold text-white group-hover:text-sky-400 transition-colors">ajith04n@gmail.com</p>
+                                </div>
+                            </a>
+
+                            <!-- Phone Card -->
+                            <a href="tel:+918590402953" class="glass-panel p-4 md:p-6 rounded-2xl flex items-center gap-6 group hover:border-sky-500/50 transition-all cursor-pointer sfx-hover sfx-click">
+                                <div class="w-12 h-12 md:w-14 md:h-14 rounded-full bg-slate-900 flex items-center justify-center text-sky-500 group-hover:scale-110 transition-transform">
+                                    <i data-lucide="phone" class="w-5 h-5 md:w-6 md:h-6"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-slate-400 text-sm font-semibold uppercase tracking-wider mb-1">Phone</h3>
+                                    <p class="text-lg md:text-xl font-bold text-white group-hover:text-sky-400 transition-colors">+91 8590402953</p>
+                                </div>
+                            </a>
+                            
+                            <!-- Social Media Links -->
+                            <div class="flex flex-wrap gap-4 items-center justify-center md:justify-start px-2">
+                                 <a href="https://www.linkedin.com/in/ajith-n-bdcu1160/" target="_blank" title="LinkedIn" class="social-link sfx-hover sfx-click"><i class="fab fa-linkedin-in text-lg"></i></a>
+                                <a href="https://github.com/ajith04-n" target="_blank" title="GitHub" class="social-link sfx-hover sfx-click"><i class="fab fa-github text-lg"></i></a>
+                                <a href="https://leetcode.com/u/ajithn_" target="_blank" title="LeetCode" class="social-link sfx-hover sfx-click"><img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/leetcode.svg" style="width:20px; filter:invert(1);"></a>
+                                <a href="https://www.credly.com/users/ajithn_" target="_blank" title="Credly" class="social-link sfx-hover sfx-click"><img src="https://www.svgrepo.com/show/331358/credly.svg" style="width:20px;"></a>
+                                <a href="https://www.hackerrank.com/profile/ajith04n" target="_blank" title="HackerRank" class="social-link sfx-hover sfx-click"><i class="fab fa-hackerrank text-lg"></i></a>
+                                <a href="https://www.instagram.com/ajithn_/" target="_blank" title="Instagram" class="social-link sfx-hover sfx-click"><i class="fab fa-instagram text-lg"></i></a>
+                            </div>
+                        </div>
+
+                        <!-- Live Chat Board (Isolated Comments) -->
+                        <div class="flex flex-col gap-4 min-h-[400px]">
+                             <h4 class="text-sm font-bold text-slate-400 mb-2 flex items-center gap-2 uppercase tracking-widest border-b border-slate-800 pb-3">
+                                 <i data-lucide="message-square" class="w-4 h-4"></i> Community Wall
+                             </h4>
+                             <div id="message-board" class="flex-1 overflow-y-auto pr-2 custom-scrollbar flex flex-col gap-6">
+                                 <!-- Messages will appear here -->
+                                 <div class="text-xs text-slate-600 text-center py-12 italic" id="empty-msg">
+                                     <div class="mb-2"><i data-lucide="message-circle" class="w-8 h-8 mx-auto opacity-50"></i></div>
+                                     No messages yet.<br>Be the first to say hello!
+                                 </div>
+                             </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Right Column: Map & Form -->
+                    <div class="flex flex-col gap-6 h-full">
+                        
+                        <!-- Google Map Embed (Moved to Top Right) -->
+                        <div class="w-full h-64 md:h-80 rounded-2xl overflow-hidden glass-panel p-2 shadow-xl shrink-0 border border-slate-700">
+                            <iframe 
+                                class="w-full h-full rounded-xl map-filter opacity-80 hover:opacity-100 transition-opacity"
+                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3917.6449118539235!2d76.36279637512996!3d10.914567656630254!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ba7d7d9d7838b0d%3A0xd8321d242c62120f!2sCHALIKUNDU%2C%20KUTTANASSERY!5e0!3m2!1sen!2sin!4v1764956750118!5m2!1sen!2sin"
+                                frameborder="0" 
+                                scrolling="no" 
+                                marginheight="0" 
+                                marginwidth="0">
+                            </iframe>
+                        </div>
+
+                        <!-- Form (Right Side) -->
+                        <div class="glass-panel p-8 md:p-10 rounded-2xl relative overflow-hidden flex flex-col justify-center flex-1 border border-slate-700 shadow-xl">
+                             
+                             <h3 class="text-2xl font-bold mb-6 text-white">Write a Comment</h3>
+                             
+                             <form id="contact-form" class="space-y-4">
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-slate-400 text-xs font-medium mb-2 pl-1">Name</label>
+                                        <input type="text" id="msg-name" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-3 text-white text-sm focus:outline-none focus:border-sky-500 focus:bg-slate-800 transition-all" placeholder="John">
+                                    </div>
+                                    <div>
+                                        <label class="block text-slate-400 text-xs font-medium mb-2 pl-1">Email</label>
+                                        <input type="email" id="msg-email" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-3 text-white text-sm focus:outline-none focus:border-sky-500 focus:bg-slate-800 transition-all" placeholder="john@example.com">
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-slate-400 text-xs font-medium mb-2 pl-1">Message</label>
+                                    <textarea id="msg-content" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-3 text-white text-sm h-32 resize-none focus:outline-none focus:border-sky-500 focus:bg-slate-800 transition-all" placeholder="Share your thoughts..."></textarea>
+                                </div>
+                                <button type="submit" id="submit-btn" class="w-full bg-sky-500 hover:bg-sky-600 text-slate-900 font-bold py-4 rounded-lg transition-all shadow-lg shadow-sky-500/20 flex items-center justify-center gap-2 text-sm mt-2 sfx-click">
+                                    <span>Post Comment</span>
+                                    <i data-lucide="send" class="w-4 h-4"></i>
+                                </button>
+                             </form>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="py-8 border-t border-slate-800 text-center mt-auto">
+        <div class="container mx-auto px-6 flex flex-col items-center">
+            <div class="text-sm text-slate-500">
+                &copy; <span id="year"></span> Ajith N. All rights reserved.
+            </div>
+            <div class="text-xs text-slate-700 mt-2 font-mono">
+                Designed with <span class="text-sky-900">♥</span> & Code
+            </div>
+        </div>
+    </footer>
+
+    <!-- LOGIC -->
+    <script>
+        // --- SOUND FX ENGINE (Web Audio API) ---
+        const SFX = (function() {
+            let audioCtx = null;
+            let enabled = false;
+            let initialized = false;
+
+            const toggleBtn = document.getElementById('sound-toggle');
+            const icon = document.getElementById('sound-icon');
+            const indicator = document.getElementById('sound-indicator');
+
+            function init() {
+                if (initialized) return;
+                try {
+                    const AudioContext = window.AudioContext || window.webkitAudioContext;
+                    audioCtx = new AudioContext();
+                    initialized = true;
+                    // Auto-enable on first click if context is suspended
+                    if (audioCtx.state === 'suspended') {
+                        const resume = () => {
+                            audioCtx.resume();
+                            // Play intro sound on first interaction
+                            if(enabled) playIntro();
+                            document.removeEventListener('click', resume);
+                            document.removeEventListener('keydown', resume);
+                        };
+                        document.addEventListener('click', resume);
+                        document.addEventListener('keydown', resume);
+                    }
+                } catch (e) {
+                    console.error("Web Audio API not supported");
+                }
             }
 
-            return "I can help with questions about Ajith's projects, skills, education, certifications, or contact details. What would you like to know?";
+            function toggle() {
+                if (!initialized) init();
+                enabled = !enabled;
+                updateUI();
+                if(enabled && audioCtx.state === 'running') playClick(1000, 'square'); // Confirm sound
+            }
+
+            function updateUI() {
+                if (enabled) {
+                    icon.setAttribute('data-lucide', 'volume-2');
+                    toggleBtn.classList.add('text-sky-400', 'bg-white/10');
+                    toggleBtn.classList.remove('text-slate-400');
+                    indicator.classList.remove('hidden');
+                } else {
+                    icon.setAttribute('data-lucide', 'volume-x');
+                    toggleBtn.classList.remove('text-sky-400', 'bg-white/10');
+                    toggleBtn.classList.add('text-slate-400');
+                    indicator.classList.add('hidden');
+                }
+                if (window.lucide) lucide.createIcons();
+            }
+
+            // --- SYNTHESIZERS ---
+
+            // Click: Short, percussive
+            function playClick(freq = 600, type = 'sine') {
+                if (!enabled || !audioCtx) return;
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.1);
+                
+                gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1);
+
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.1);
+            }
+
+            // Hover: High pitched blip
+            function playHover() {
+                if (!enabled || !audioCtx) return;
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+                
+                gain.gain.setValueAtTime(0.02, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.05);
+
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.05);
+            }
+
+            // Whoosh: Filtered Noise for transitions
+            function playWhoosh() {
+                if (!enabled || !audioCtx) return;
+                const bufferSize = audioCtx.sampleRate * 0.5; // 0.5 sec
+                const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+                const data = buffer.getChannelData(0);
+                for (let i = 0; i < bufferSize; i++) {
+                    data[i] = Math.random() * 2 - 1;
+                }
+
+                const noise = audioCtx.createBufferSource();
+                noise.buffer = buffer;
+
+                const filter = audioCtx.createBiquadFilter();
+                filter.type = 'lowpass';
+                filter.frequency.setValueAtTime(200, audioCtx.currentTime);
+                filter.frequency.exponentialRampToValueAtTime(2000, audioCtx.currentTime + 0.2);
+                filter.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.5);
+
+                const gain = audioCtx.createGain();
+                gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.5);
+
+                noise.connect(filter);
+                filter.connect(gain);
+                gain.connect(audioCtx.destination);
+                noise.start();
+            }
+
+            // Intro: Major Chord Arpeggio
+            function playIntro() {
+                if (!enabled || !audioCtx) return;
+                const notes = [440, 554.37, 659.25, 880]; // A Major
+                const now = audioCtx.currentTime;
+                
+                notes.forEach((freq, i) => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(freq, now + i * 0.1);
+                    
+                    gain.gain.setValueAtTime(0, now + i * 0.1);
+                    gain.gain.linearRampToValueAtTime(0.1, now + i * 0.1 + 0.05);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.1 + 0.5);
+
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start(now + i * 0.1);
+                    osc.stop(now + i * 0.1 + 0.6);
+                });
+            }
+
+            // Bind Events
+            if(toggleBtn) toggleBtn.addEventListener('click', toggle);
+
+            // Global delegation for sfx classes
+            document.addEventListener('mouseenter', (e) => {
+                if (e.target instanceof Element && e.target.closest('.sfx-hover')) playHover();
+            }, true);
+
+            document.addEventListener('click', (e) => {
+                if (e.target instanceof Element && e.target.closest('.sfx-click')) playClick();
+            }, true);
+
+            return {
+                playClick,
+                playHover,
+                playWhoosh,
+                playIntro,
+                init
+            };
+        })();
+
+        // --- ANIMATION & UI LOGIC ---
+
+        const sections = ['home', 'about', 'projects', 'music', 'contact'];
+
+        // 1. Tab Switching Logic
+        function switchSection(id) {
+            SFX.playWhoosh(); // Play transition sound
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            sections.forEach(sectionId => {
+                const el = document.getElementById(sectionId);
+                if(el) {
+                    el.classList.add('hidden');
+                    el.classList.remove('section-fade-in'); 
+                }
+            });
+            const target = document.getElementById(id);
+            if(target) {
+                target.classList.remove('hidden');
+                target.classList.add('section-fade-in'); 
+            }
+            document.querySelectorAll('.nav-item').forEach(btn => {
+                if(btn.dataset.target === id) {
+                    btn.classList.add('text-white', 'bg-white/10');
+                    btn.classList.remove('text-slate-400', 'hover:bg-white/5');
+                } else {
+                    btn.classList.remove('text-white', 'bg-white/10');
+                    btn.classList.add('text-slate-400', 'hover:bg-white/5');
+                }
+            });
+            const visibleReveals = target.querySelectorAll('.reveal');
+            visibleReveals.forEach(el => el.classList.add('active'));
+        }
+
+        // 2. Mobile Menu Logic
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            if (menu.classList.contains('opacity-0')) {
+                menu.classList.remove('opacity-0', 'pointer-events-none');
+            } else {
+                menu.classList.add('opacity-0', 'pointer-events-none');
+            }
+        }
+
+        function mobileNavClick(id) {
+            toggleMobileMenu();
+            setTimeout(() => switchSection(id), 300);
+        }
+
+        // 3. Resume Modal Logic (Improved)
+        function toggleResumeModal() {
+            const modal = document.getElementById('resume-modal');
+            const content = document.getElementById('resume-content');
+            
+            if (modal.classList.contains('hidden')) {
+                // Open
+                modal.classList.remove('hidden');
+                // Tiny timeout to allow display:block to apply before opacity transition
+                setTimeout(() => {
+                    modal.classList.remove('opacity-0');
+                    content.classList.remove('scale-95');
+                    content.classList.add('scale-100');
+                }, 10);
+            } else {
+                // Close
+                modal.classList.add('opacity-0');
+                content.classList.remove('scale-100');
+                content.classList.add('scale-95');
+                setTimeout(() => {
+                    modal.classList.add('hidden');
+                }, 300); // Match transition duration
+            }
+        }
+
+        // 5. Contact Form Logic (Isolated Cards Style)
+        const contactForm = document.getElementById('contact-form');
+        const submitBtn = document.getElementById('submit-btn');
+        const messageBoard = document.getElementById('message-board');
+        const emptyMsg = document.getElementById('empty-msg');
+        
+        const loadMessages = () => {
+            const saved = localStorage.getItem('ajith_portfolio_messages_v3');
+            if (saved) {
+                const messages = JSON.parse(saved);
+                if (messages.length > 0 && emptyMsg) emptyMsg.style.display = 'none';
+                messageBoard.innerHTML = ''; 
+                // Render in reverse order so newest is top if we append, or just iterate. 
+                // Let's iterate and PREPEND to keep newest at top.
+                messages.forEach((msg, index) => renderMessage(msg, index));
+            }
         };
 
-        const handleSend = () => {
-            const msg = chatInput.value.trim();
-            if (!msg) return;
-            addMessage(msg, 'user');
-            chatInput.value = '';
+        const renderMessage = (data, index) => {
+            // Create Isolated Card Container
+            const wrapper = document.createElement('div');
+            wrapper.className = 'animate-fade-in-up glass-panel p-5 rounded-xl border border-slate-700 relative group sfx-hover';
+            
+            // Avatar Initials
+            const initials = data.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+            const colorClass = ['bg-sky-500', 'bg-blue-500', 'bg-indigo-500', 'bg-violet-500'][index % 4];
 
-            setTimeout(() => {
-                const botReply = getBotReply(msg);
-                addMessage(botReply, 'bot');
-            }, 500); // Small delay to simulate thinking
+            let html = `
+                <div class="flex gap-4">
+                    <div class="w-10 h-10 rounded-full ${colorClass} flex items-center justify-center text-white font-bold text-xs shrink-0 shadow-md">
+                        ${initials}
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex justify-between items-start mb-2">
+                            <div>
+                                <h5 class="text-sm font-bold text-white">${data.name}</h5>
+                                <span class="text-[10px] text-slate-500">${data.date}</span>
+                            </div>
+                            <button onclick="deleteMessage(${index})" class="opacity-0 group-hover:opacity-100 transition-opacity text-slate-600 hover:text-red-500 p-1 sfx-click">
+                                <i data-lucide="trash-2" class="w-3 h-3"></i>
+                            </button>
+                        </div>
+                        <p class="text-xs text-slate-300 leading-relaxed mb-3">${data.message}</p>
+                        
+                        <div class="flex items-center gap-4 border-t border-slate-700 pt-2">
+                            <button onclick="replyToMessage(${index})" class="flex items-center gap-1 text-[10px] text-slate-400 hover:text-sky-400 transition-colors sfx-click">
+                                <i data-lucide="message-circle" class="w-3 h-3"></i> Reply
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Render Nested Reply if exists
+            if (data.reply) {
+                html += `
+                    <div class="mt-4 ml-14 bg-slate-900 p-3 rounded-lg border border-slate-700 relative">
+                        <div class="absolute -left-6 top-4 w-6 h-[1px] bg-slate-700"></div> <!-- Connector Line -->
+                        <div class="flex gap-3">
+                            <div class="w-6 h-6 rounded-full bg-sky-600 flex items-center justify-center text-white font-bold text-[8px] shrink-0">
+                                AN
+                            </div>
+                            <div>
+                                <div class="flex items-center gap-2 mb-1">
+                                    <span class="text-xs font-bold text-sky-400">Ajith N.</span>
+                                    <span class="text-[9px] bg-sky-500/20 text-sky-300 px-1 rounded">Admin</span>
+                                </div>
+                                <p class="text-xs text-slate-300">${data.reply}</p>
+                                <span class="text-[9px] text-slate-600 block mt-1">${data.replyDate}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            wrapper.innerHTML = html;
+            // Insert at top
+            messageBoard.insertBefore(wrapper, messageBoard.firstChild);
         };
 
-        chatSend.onclick = handleSend;
-        chatInput.addEventListener('keypress', e => {
-            if (e.key === 'Enter') handleSend();
+        window.replyToMessage = (index) => {
+            const saved = localStorage.getItem('ajith_portfolio_messages_v3');
+            if (!saved) return;
+            const messages = JSON.parse(saved);
+            
+            // Simple prompt for now - in a real app this would be an inline form
+            const replyText = prompt(`Reply to ${messages[index].name}:`);
+            
+            if (replyText) {
+                messages[index].reply = replyText;
+                messages[index].replyDate = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+                localStorage.setItem('ajith_portfolio_messages_v3', JSON.stringify(messages));
+                loadMessages(); // Re-render
+                if(window.lucide) lucide.createIcons();
+            }
+        };
+
+        window.deleteMessage = (index) => {
+            if(!confirm("Delete this comment?")) return;
+            const saved = localStorage.getItem('ajith_portfolio_messages_v3');
+            if (!saved) return;
+            let messages = JSON.parse(saved);
+            messages.splice(index, 1); // Remove item
+            localStorage.setItem('ajith_portfolio_messages_v3', JSON.stringify(messages));
+            loadMessages();
+            if(window.lucide) lucide.createIcons();
+        };
+
+        if(contactForm && submitBtn) {
+            loadMessages();
+
+            contactForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                const name = document.getElementById('msg-name').value;
+                const message = document.getElementById('msg-content').value;
+                const date = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+
+                const originalText = submitBtn.innerHTML;
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = `<i data-lucide="loader" class="w-4 h-4 animate-spin"></i> Posting...`;
+                if(window.lucide) lucide.createIcons();
+
+                setTimeout(() => {
+                    const msgData = { name, message, date, reply: null };
+                    
+                    const saved = localStorage.getItem('ajith_portfolio_messages_v3');
+                    const messages = saved ? JSON.parse(saved) : [];
+                    messages.push(msgData); 
+                    localStorage.setItem('ajith_portfolio_messages_v3', JSON.stringify(messages));
+
+                    if(emptyMsg) emptyMsg.style.display = 'none';
+                    loadMessages(); 
+                    if(window.lucide) lucide.createIcons();
+                    
+                    submitBtn.classList.remove('bg-sky-500', 'hover:bg-sky-600');
+                    submitBtn.classList.add('bg-green-500', 'hover:bg-green-600');
+                    submitBtn.innerHTML = `<i data-lucide="check" class="w-4 h-4"></i> Posted!`;
+                    if(window.lucide) lucide.createIcons();
+
+                    contactForm.reset();
+                    setTimeout(() => {
+                        submitBtn.disabled = false;
+                        submitBtn.classList.remove('bg-green-500', 'hover:bg-green-600');
+                        submitBtn.classList.add('bg-sky-500', 'hover:bg-sky-600');
+                        submitBtn.innerHTML = originalText;
+                        if(window.lucide) lucide.createIcons();
+                    }, 2000);
+                }, 600);
+            });
+        }
+
+
+        // --- SPOTIFY API LOGIC (Preserved) ---
+        // ... (Keep existing Spotify Logic) ...
+        const SPOTIFY_CONFIG = {
+            clientId: "19e2b68b3c0e4b689d6bd8cc01cb7604",
+            clientSecret: "1bbaee587c244c23855c03ddd2da299e",
+        };
+
+        const defaultLibrary = [
+            { id: "0VjIjW4GlUZAMYd2vXMi3b", title: "Blinding Lights", artist: "The Weeknd", cover: "https://i.scdn.co/image/ab67616d0000b2738863bc11d2aa12b54f5aeb36" },
+            { id: "7qiZfU4dY1lWllzX7mPBI3", title: "Shape of You", artist: "Ed Sheeran", cover: "https://i.scdn.co/image/ab67616d0000b273ba5db46f4b838ef6027e6f96" },
+            { id: "0pqnGHJpmpxLKifKRmU6WP", title: "Believer", artist: "Imagine Dragons", cover: "https://i.scdn.co/image/ab67616d0000b2735675e83f23315a676b744d08" },
+            { id: "6sqNctd7MlJoKDOxPVCAvU", title: "Levitating", artist: "Dua Lipa", cover: "https://i.scdn.co/image/ab67616d0000b273bd26ede1ae69327010d49946" },
+            { id: "5wANPM4fQCJwkGd4rN57mH", title: "Drivers License", artist: "Olivia Rodrigo", cover: "https://i.scdn.co/image/ab67616d0000b273a91c10fe9472d9bf8983635d" }
+        ];
+
+        let currentPlaylist = [...defaultLibrary];
+        let currentTrackId = defaultLibrary[0].id;
+        let accessToken = null;
+
+        const iframe = document.getElementById('spotify-iframe');
+        const playlistContainer = document.getElementById('playlist-container');
+        const searchForm = document.getElementById('search-form');
+        const searchInput = document.getElementById('search-input');
+        const apiStatusDiv = document.getElementById('api-status');
+
+        async function getAccessToken() {
+            if (!SPOTIFY_CONFIG.clientId || !SPOTIFY_CONFIG.clientSecret) return;
+            const basicAuth = btoa(`${SPOTIFY_CONFIG.clientId}:${SPOTIFY_CONFIG.clientSecret}`);
+            try {
+                const response = await fetch("https://accounts.spotify.com/api/token", {
+                    method: "POST", headers: { Authorization: `Basic ${basicAuth}`, "Content-Type": "application/x-www-form-urlencoded" },
+                    body: "grant_type=client_credentials",
+                });
+                if (!response.ok) throw new Error("Auth Failed");
+                const data = await response.json();
+                accessToken = data.access_token;
+                apiStatusDiv.innerHTML = `<span class="bg-green-500/20 border border-green-500/50 text-green-300 px-3 py-1 rounded-full text-xs font-bold backdrop-blur-md">API Active</span>`;
+                apiStatusDiv.classList.remove('hidden');
+            } catch (error) {
+                console.error(error);
+                apiStatusDiv.innerHTML = `<span class="bg-red-500/20 border border-red-500/50 text-red-300 px-3 py-1 rounded-full text-xs font-bold backdrop-blur-md">API Offline</span>`;
+                apiStatusDiv.classList.remove('hidden');
+            }
+        }
+
+        async function searchTracks(query) {
+            if (!query || !accessToken) return;
+            playlistContainer.style.opacity = '0.5';
+            try {
+                const response = await fetch(`https://api.spotify.com/v1/search?q=${encodeURIComponent(query)}&type=track&limit=8`, { headers: { Authorization: `Bearer ${accessToken}` } });
+                if (!response.ok) throw new Error("Search Failed");
+                const data = await response.json();
+                const tracks = data.tracks.items.map(track => ({ id: track.id, title: track.name, artist: track.artists[0].name, cover: track.album.images[0]?.url || "" }));
+                currentPlaylist = tracks;
+                if(tracks.length > 0) playTrack(tracks[0].id);
+                renderPlaylist();
+            } catch (error) { console.error(error); } finally { playlistContainer.style.opacity = '1'; }
+        }
+
+        function playTrack(id) {
+            currentTrackId = id;
+            iframe.src = `https://open.spotify.com/embed/track/${id}?theme=0`;
+            renderPlaylist();
+        }
+
+        function renderPlaylist() {
+            playlistContainer.innerHTML = '';
+            if(currentPlaylist.length === 0) { playlistContainer.innerHTML = '<div class="text-slate-500 text-sm text-center py-4">No tracks found.</div>'; return; }
+            currentPlaylist.forEach(track => {
+                const isActive = track.id === currentTrackId;
+                const div = document.createElement('div');
+                div.className = `flex items-center p-3 rounded-xl cursor-pointer transition-all duration-300 group ${isActive ? "bg-slate-800 border border-sky-500/30" : "hover:bg-slate-800/50 border border-transparent"} sfx-hover`;
+                div.onclick = () => { SFX.playClick(); playTrack(track.id); };
+                div.innerHTML = `<div class="relative w-12 h-12 mr-4 flex-shrink-0"><img src="${track.cover}" class="w-full h-full rounded-lg object-cover ${isActive ? 'ring-2 ring-sky-500' : ''}" alt="Art">${isActive ? '<div class="absolute inset-0 bg-black/40 flex items-center justify-center rounded-lg"><div class="bar h-3 bg-white mx-[1px]"></div><div class="bar h-3 bg-white mx-[1px]"></div></div>' : ''}</div><div class="flex-1 overflow-hidden"><p class="font-bold text-sm truncate ${isActive ? 'text-sky-400' : 'text-white'}">${track.title}</p><p class="text-slate-500 text-xs truncate group-hover:text-slate-300 transition-colors">${track.artist}</p></div>${isActive ? '<i data-lucide="volume-2" class="text-sky-500 w-4 h-4 animate-pulse"></i>' : '<i data-lucide="play" class="text-slate-600 w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity"></i>'}`;
+                playlistContainer.appendChild(div);
+            });
+            if(window.lucide) lucide.createIcons();
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('year').innerText = new Date().getFullYear();
+            if(window.lucide) lucide.createIcons();
+            switchSection('home');
+            getAccessToken();
+            playTrack(currentTrackId);
+            searchForm.addEventListener('submit', (e) => { e.preventDefault(); searchTracks(searchInput.value); });
+            
+            // Initialize SFX
+            SFX.init();
         });
 
-    // --- 10. SCRIBBLE BOARD ---
-    const scribbleCanvas = document.getElementById('scribble-canvas');
-    const scribbleCtx = scribbleCanvas.getContext('2d');
-    const resetBtn = document.getElementById('reset-canvas');
-    
-    let isScribbling = false;
-    let scribbleLastX = 0;
-    let scribbleLastY = 0;
-    let scribbleHue = 0;
-
-    function resizeScribbleCanvas() {
-      const rect = scribbleCanvas.parentElement.getBoundingClientRect();
-      scribbleCanvas.width = rect.width;
-      scribbleCanvas.height = rect.height;
-      scribbleCtx.strokeStyle = '#fff';
-      scribbleCtx.lineJoin = 'round';
-      scribbleCtx.lineCap = 'round';
-      scribbleCtx.lineWidth = 2;
-    }
-
-    function drawScribble(e) {
-      if (!isScribbling) return;
-      scribbleCtx.beginPath();
-      scribbleCtx.moveTo(scribbleLastX, scribbleLastY);
-      
-      // Get position relative to canvas
-      const rect = scribbleCanvas.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      
-      scribbleCtx.lineTo(x, y);
-      scribbleCtx.strokeStyle = `hsl(${scribbleHue}, 100%, 50%)`;
-      scribbleCtx.stroke();
-      [scribbleLastX, scribbleLastY] = [x, y];
-      scribbleHue = (scribbleHue + 1) % 360;
-    }
-
-    function startScribble(e) {
-      isScribbling = true;
-      const rect = scribbleCanvas.getBoundingClientRect();
-      [scribbleLastX, scribbleLastY] = [e.clientX - rect.left, e.clientY - rect.top];
-    }
-
-    scribbleCanvas.addEventListener('mousedown', startScribble);
-    scribbleCanvas.addEventListener('mousemove', drawScribble);
-    scribbleCanvas.addEventListener('mouseup', () => isScribbling = false);
-    scribbleCanvas.addEventListener('mouseout', () => isScribbling = false);
-    scribbleCanvas.addEventListener('touchstart', e => {
-      e.preventDefault();
-      const touch = e.touches[0];
-      startScribble(touch);
-    });
-    scribbleCanvas.addEventListener('touchmove', e => {
-      e.preventDefault();
-      const touch = e.touches[0];
-      drawScribble(touch);
-    });
-    scribbleCanvas.addEventListener('touchend', () => isScribbling = false);
-
-    resetBtn.addEventListener('click', () => {
-      scribbleCtx.clearRect(0, 0, scribbleCanvas.width, scribbleCanvas.height);
-    });
-
-    window.addEventListener('resize', resizeScribbleCanvas);
-    resizeScribbleCanvas();    // --- 11. PROJECT FILTERS & MODAL HANDLERS ---
-    const filterBtns = document.querySelectorAll('.filter-btn');
-    const projectCards = document.querySelectorAll('.pcard');
-    filterBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        filterBtns.forEach(b => b.setAttribute('aria-pressed', 'false'));
-        btn.setAttribute('aria-pressed', 'true');
-        const f = btn.dataset.filter;
-        projectCards.forEach(card => {
-          const cats = card.dataset.category ? card.dataset.category.split(' ') : [];
-          if (f === 'all' || cats.includes(f)) {
-            card.style.display = '';
-          } else {
-            card.style.display = 'none';
-          }
-        });
-      });
-    });
-
-    // Modal
-    const projectModal = document.getElementById('project-modal');
-    const modalBody = document.getElementById('modal-body');
-    const modalTitle = document.getElementById('modal-title');
-    const modalDesc = document.getElementById('modal-desc');
-    const modalTechs = document.getElementById('modal-techs');
-    const modalClose = document.getElementById('modal-close');
-
-    const projectData = {
-      'Tasty Treat Express': {
-        desc: 'Tasty Treat Express is a full-stack food ordering application built with Java, Spring Boot and Thymeleaf. Features include restaurant listing, ordering flow, and order status tracking.',
-        techs: ['Java', 'Spring Boot', 'Thymeleaf', 'MySQL']
-      },
-      'Steganography Tool': {
-        desc: 'A console-based steganography utility implemented in Java that encodes/decodes messages into image pixels with simple LSB techniques and file I/O.',
-        techs: ['Java', 'Image Processing']
-      }
-    };
-
-    document.querySelectorAll('[data-open-project]').forEach((btn, idx) => {
-      btn.addEventListener('click', (e) => {
-        e.preventDefault();
-        // find project card parent
-        const card = btn.closest('.pcard');
-        if (!card) return;
-        const titleEl = card.querySelector('.pbody h3');
-        const title = titleEl ? titleEl.textContent.trim() : 'Project';
-        const data = projectData[title] || { desc: titleEl?.nextElementSibling?.textContent || '', techs: [] };
-        modalTitle.textContent = title;
-        modalDesc.textContent = data.desc || '';
-        modalTechs.innerHTML = '';
-        (data.techs || []).forEach(t => {
-          const s = document.createElement('span'); s.className = 'pill'; s.textContent = t; modalTechs.appendChild(s);
-        });
-        projectModal.style.display = 'flex';
-        projectModal.setAttribute('aria-hidden', 'false');
-      });
-    });
-
-    modalClose.addEventListener('click', () => {
-      projectModal.style.display = 'none';
-      projectModal.setAttribute('aria-hidden', 'true');
-    });
-
-    document.getElementById('modal-overlay').addEventListener('click', () => {
-      projectModal.style.display = 'none';
-      projectModal.setAttribute('aria-hidden', 'true');
-    });
-
-    });
-  </script>
+    </script>
 </body>
 </html>
